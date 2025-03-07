@@ -1,0 +1,93 @@
+import { useState } from "react";
+import { CiHeart, CiSearch } from "react-icons/ci";
+import { IoMenu } from "react-icons/io5";
+import { SlBasket } from "react-icons/sl";
+export default function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  return (
+    <div className="w-full h-full  ">
+      <header className="flex justify-between items-center py-6 px-8 md:px-32 border border-zinc-300 ">
+        <a href="/" className=" w-52 transition-all  font-bold text-2xl ">
+          Exclusive
+        </a>
+
+        <section className="hidden xl:flex items-center gap-12 font-semibold text-base ">
+          <a
+            href="/"
+            className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-105"
+          >
+            Home
+          </a>
+          <a
+            href="/"
+            className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-105"
+          >
+            Contact
+          </a>
+          <a
+            href="/"
+            className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-105"
+          >
+            About
+          </a>
+          <a
+            href="/"
+            className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-105"
+          >
+            SignUp
+          </a>
+        </section>
+        <section className="relative hidden sm:flex items-center justify-center gap-3">
+          <button className="absolute left-2 text-2xl">
+            <CiSearch />
+          </button>
+          <input
+            type="text"
+            placeholder="Search..."
+            className="py-1 pl-10 rounded-xl border-2 border-black"
+          />
+          <div className="flex">
+            <CiHeart className="mx-2 text-2xl cursor-pointer" />
+            <SlBasket className="text-2xl cursor-pointer" />
+          </div>
+        </section>
+        <button
+          className="xl:hidden block text-4xl sm:text-5xl  cursor-pointer"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          <IoMenu />
+        </button>
+        <div
+          className={`absolute xl:hidden bg-zinc-900 text-zinc-300 top-24 left-0 w-full flex flex-col items-center gap-6 font-semibold text-lg transform transition-transform ${
+            isMenuOpen ? "block z-10" : "hidden"
+          }`}
+        >
+          <a
+            href="/"
+            className="w-full text-center p-4 transition-all  hover:text-zinc-600 hover:scale-105 "
+          >
+            Home
+          </a>
+          <a
+            href="/"
+            className="w-full text-center p-4 transition-all  hover:text-zinc-600 hover:scale-105 "
+          >
+            Contact
+          </a>
+          <a
+            href="/"
+            className="w-full text-center p-4 transition-all  hover:text-zinc-600 hover:scale-105 "
+          >
+            About
+          </a>
+          <a
+            href="/"
+            className="w-full text-center p-4 transition-all  hover:text-zinc-600 hover:scale-105 "
+          >
+            SignUp
+          </a>
+        </div>
+      </header>
+    </div>
+  );
+}

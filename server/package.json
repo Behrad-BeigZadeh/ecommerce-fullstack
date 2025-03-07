@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.40.0",
+    "express": "^4.21.2",
+    "pg": "^8.13.3"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "node index.ts",
+    "dev": "nodemon index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.9",
+    "@types/pg": "^8.11.11",
+    "drizzle-kit": "^0.30.5",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.3"
+  }
+}
