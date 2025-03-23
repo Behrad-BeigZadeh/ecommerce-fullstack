@@ -1,9 +1,11 @@
+import { useShopContext } from "@/contexts/Context";
 import { useState } from "react";
 import { CiHeart, CiSearch } from "react-icons/ci";
 import { IoMenu } from "react-icons/io5";
 import { SlBasket } from "react-icons/sl";
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { cart } = useShopContext();
   return (
     <div className="w-full h-full  ">
       <header className="flex justify-between items-center py-6 px-8 md:px-32 border border-zinc-300 ">
@@ -31,7 +33,7 @@ export default function Header() {
             About
           </a>
           <a
-            href="/"
+            href="/signup"
             className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-105"
           >
             SignUp
@@ -48,7 +50,19 @@ export default function Header() {
           />
           <div className="flex">
             <CiHeart className="mx-2 text-2xl cursor-pointer" />
-            <SlBasket className="text-2xl cursor-pointer" />
+            <a href="/cart-items" className="relative">
+              <SlBasket className="text-2xl cursor-pointer" />
+              {cart.length > 0 ? (
+                <p
+                  className="absolute -top-2 left-2 bg-red-500 text-white rounded-full px-2 py-0.5 
+									text-xs"
+                >
+                  {cart.length}
+                </p>
+              ) : (
+                ""
+              )}
+            </a>
           </div>
         </section>
         <button
@@ -81,10 +95,16 @@ export default function Header() {
             About
           </a>
           <a
-            href="/"
+            href="/signup"
             className="w-full text-center p-4 transition-all  hover:text-zinc-600 hover:scale-105 "
           >
             SignUp
+          </a>
+          <a
+            href="/cart-items"
+            className="w-full text-center p-4 transition-all  hover:text-zinc-600 hover:scale-105 "
+          >
+            Cart
           </a>
         </div>
       </header>
