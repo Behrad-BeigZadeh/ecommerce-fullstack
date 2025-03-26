@@ -10,11 +10,15 @@ import { Toaster } from "react-hot-toast";
 import CartItems from "./components/cart/CartItems";
 import { ShopContextProvider } from "./contexts/Context";
 import { useCookies } from "react-cookie";
+import PurchasedItems from "./components/cart/PurchasedItems";
+import PurchaseSuccessPage from "./components/cart/PurchaseSuccess";
+import PurchaseCancelPage from "./components/cart/PurchaseCancel";
 
 function App() {
   const [cookies] = useCookies(["access_token"]);
+
   return (
-    <div className="font-mono">
+    <div className="font-sans">
       <ShopContextProvider>
         <Header />
         <Routes>
@@ -27,6 +31,36 @@ function App() {
             path="/cart-items"
             element={
               cookies.access_token ? <CartItems /> : <Navigate to="/login" />
+            }
+          />
+          <Route
+            path="/purchased-items"
+            element={
+              cookies.access_token ? (
+                <PurchasedItems />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+          <Route
+            path="/purchase-success"
+            element={
+              cookies.access_token ? (
+                <PurchaseSuccessPage />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+          <Route
+            path="/purchase-cancel"
+            element={
+              cookies.access_token ? (
+                <PurchaseCancelPage />
+              ) : (
+                <Navigate to="/login" />
+              )
             }
           />
         </Routes>

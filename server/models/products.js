@@ -10,11 +10,11 @@ const productSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    price: {
+    PreviousPrice: {
       type: Number,
       required: true,
     },
-    offPrice: {
+    price: {
       type: Number,
       required: true,
     },

@@ -1,9 +1,6 @@
 import { productType } from "./FlashSales";
 import { FaStar } from "react-icons/fa6";
-import { useProductStore } from "@/stores/useProductStore";
-import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+
 import { useShopContext } from "@/contexts/Context";
 
 interface Props {
@@ -12,19 +9,8 @@ interface Props {
 
 export default function FlashSalesProduct(props: Props) {
   const { addToCart } = useShopContext();
-  const userID = window.localStorage.getItem("userID");
-  const cookies = useCookies(["access_token"]);
-  const navigate = useNavigate();
-  const { _id, offPercent, imageUrl, price, name, offPrice } = props.product;
+  const { offPercent, imageUrl, price, name, previousPrice } = props.product;
   const product = props.product;
-
-  const handleAddToCart = () => {
-    if (!cookies) {
-      toast.error("Please Login To Add Products To Your Cart");
-      navigate("/login");
-    }
-    addToCart(product);
-  };
 
   return (
     <div className="w-200  flex flex-col justify-center  max-w-[80%]   mx-auto">
@@ -36,7 +22,7 @@ export default function FlashSalesProduct(props: Props) {
       </div>
 
       <button
-        onClick={() => handleAddToCart()}
+        onClick={() => addToCart(product)}
         className="w-full rounded-b-xl  text-center p-2 bg-black text-zinc-300 text-xl cursor-pointer hover:bg-zinc-800  font-semibold"
       >
         Add To Cart
@@ -45,9 +31,9 @@ export default function FlashSalesProduct(props: Props) {
       <div>
         <p className="font-semibold my-1.5">{name}</p>
         <div className="flex ">
-          <p className="text-red-500 font-medium">{offPrice}$</p>
+          <p className="text-red-500 font-medium">{price}$</p>
           <p className="text-zinc-500 line-through px-3 font-medium">
-            {price}$
+            {previousPrice}$
           </p>
         </div>
       </div>

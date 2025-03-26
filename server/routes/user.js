@@ -111,7 +111,6 @@ router.post(
           pass: process.env.APP_PASSWORD,
         },
       });
-
       var mailOptions = {
         from: process.env.MY_EMAIL,
         to: email,

@@ -1,7 +1,8 @@
 import { useShopContext } from "@/contexts/Context";
 import { useState } from "react";
-import { CiHeart, CiSearch } from "react-icons/ci";
+import { CiSearch } from "react-icons/ci";
 import { IoMenu } from "react-icons/io5";
+import { BsCartCheckFill } from "react-icons/bs";
 import { SlBasket } from "react-icons/sl";
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -49,7 +50,10 @@ export default function Header() {
             className="py-1 pl-10 rounded-xl border-2 border-black"
           />
           <div className="flex">
-            <CiHeart className="mx-2 text-2xl cursor-pointer" />
+            <a href="purchased-items">
+              <BsCartCheckFill className="mx-2 text-2xl cursor-pointer" />
+            </a>
+
             <a href="/cart-items" className="relative">
               <SlBasket className="text-2xl cursor-pointer" />
               {cart.length > 0 ? (

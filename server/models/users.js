@@ -13,6 +13,9 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password is required"],
     },
+    purchasedItems: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Product", default: [] },
+    ],
     cartItems: [
       {
         quantity: {

@@ -3,6 +3,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import productsRouter from "./routes/products.js";
 import userRouter from "./routes/user.js";
+import couponRouter from "./routes/coupon.js";
+import paymentsRouter from "./routes/payment.js";
+
 import { connectDb } from "./config/db.js";
 import { aj } from "./lib/arcjet.js";
 import morgan from "morgan";
@@ -57,6 +60,8 @@ app.use(async (req, res, next) => {
 });
 
 app.use("/api/products", productsRouter);
+app.use("/api/coupons", couponRouter);
+app.use("/api/payments", paymentsRouter);
 app.use("/api/auth", userRouter);
 
 app.listen(PORT, () => {

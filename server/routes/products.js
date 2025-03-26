@@ -1,5 +1,4 @@
 import express from "express";
-
 import { verifyToken } from "./user.js";
 import { UserModel } from "../models/users.js";
 import { productModel } from "../models/products.js";
@@ -11,6 +10,24 @@ router.get("/", async (req, res) => {
     const products = await productModel.find({});
     console.log(products);
     res.status(201).json(products);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.delete("/clear-cart", async (req, res) => {
+  try {
+    const userID = req.headers.userid;
+    const user = await UserModel.findByIdAndUpdate(userID, {
+      $set: { cartItems: [] },
+    });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await user.save();
+    console.log(user);
+    res.status(201).json({ message: "Cart Cleared Successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -39,6 +56,8 @@ router.post("/add-to-cart", verifyToken, async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
+
+router.post("/checkout", verifyToken, async (req, res) => {});
 
 router.get("/cart-items", verifyToken, async (req, res) => {
   try {

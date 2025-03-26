@@ -7,8 +7,8 @@ export interface productType {
   imageUrl: string;
   name: string;
   price: number;
-  offPrice: number;
-  stockQuantity: number;
+  previousPrice: number;
+  quantity: number;
   offPercent: number;
 }
 
