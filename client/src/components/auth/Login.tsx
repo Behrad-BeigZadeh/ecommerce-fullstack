@@ -17,12 +17,8 @@ export default function Login() {
   const [_, setCookies] = useCookies(["access_token"]);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setErrors([]);
-    setIsSubmitting(true);
-    try {
-      const res = await axios.post(
+  const loginUser = async (userData: { email: string; password: string }) => {
+    const { data } = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/auth/login`,
         {
           email,
