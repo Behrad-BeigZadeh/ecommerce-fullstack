@@ -8,9 +8,7 @@ import { RiArrowRightLine } from "react-icons/ri";
 import { TbHeartHandshake } from "react-icons/tb";
 
 const PurchaseSuccessPage = () => {
-  const [isProcessing, setIsProcessing] = useState(true);
-  const { clearCart } = useShopContext();
-  const userID = window.localStorage.getItem("userID");
+  const {userID} = useCartStore() 
   const [cookies] = useCookies(["access_token"]);
   const [error, setError] = useState(null);
 
