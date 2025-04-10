@@ -2,6 +2,7 @@ import useCartStore from "@/stores/cartStore";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import toast from "react-hot-toast";
 
 const stripePromise = loadStripe(
   String(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
@@ -44,6 +45,7 @@ const Order = () => {
         console.error("Error:", result.error);
       }
     } catch (error) {
+      toast.error("Error finalizing order");
       console.log("Error finalizing order", error);
     }
   };
