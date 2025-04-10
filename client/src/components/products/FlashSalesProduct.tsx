@@ -1,16 +1,64 @@
 import { productType } from "./FlashSales";
 import { FaStar } from "react-icons/fa6";
-
-import { useShopContext } from "@/contexts/Context";
+import { useCartStore } from "@/stores/cartStore";
+import { useCookies } from "react-cookie";
+import { AxiosError } from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { addToCartAPI } from "../../api/api";
 
 interface Props {
   product: productType;
 }
+export interface ErrorResponse {
+  message?: string;
+  error?: string;
+}
 
 export default function FlashSalesProduct(props: Props) {
-  const { addToCart } = useShopContext();
+  const { addToCart, userID } = useCartStore();
+  const [cookies] = useCookies(["access_token"]);
   const { offPercent, imageUrl, price, name, previousPrice } = props.product;
+  const navigate = useNavigate();
   const product = props.product;
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation<
+    productType,
+    AxiosError<ErrorResponse>,
+    productType
+  >({
+    mutationFn: () => addToCartAPI(product, cookies.access_token, userID),
+    onSuccess: () => {
+      addToCart(product);
+      toast.success("Product added to cart");
+      queryClient.invalidateQueries({ queryKey: ["cartItems", userID] });
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      if (error.response?.status === 429) {
+        toast.error(
+          error.response?.data?.error ||
+            "Too many requests, please try again later.",
+          { id: "add_product" }
+        );
+        return;
+      }
+      toast.error(error?.response?.data.message || "An error occurred", {
+        id: "add_product",
+      });
+    },
+  });
+
+  const handleAddToCart = () => {
+    if (!cookies.access_token) {
+      toast.error("Login to be able to add products to your cart", {
+        id: "add_product",
+      });
+      navigate("/login");
+    }
+    mutation.mutate(product);
+  };
 
   return (
     <div className="w-200  flex flex-col justify-center  max-w-[80%]   mx-auto">
@@ -22,7 +70,7 @@ export default function FlashSalesProduct(props: Props) {
       </div>
 
       <button
-        onClick={() => addToCart(product)}
+        onClick={handleAddToCart}
         className="w-full rounded-b-xl  text-center p-2 bg-black text-zinc-300 text-xl cursor-pointer hover:bg-zinc-800  font-semibold"
       >
         Add To Cart

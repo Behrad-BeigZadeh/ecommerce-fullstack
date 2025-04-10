@@ -1,26 +1,85 @@
-import { useShopContext } from "@/contexts/Context";
+import useCartStore from "@/stores/cartStore";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { applyCoupon, getCoupon } from "../../api/api";
+import { useCookies } from "react-cookie";
+import toast from "react-hot-toast";
+import { AxiosError } from "axios";
+import { ErrorResponse } from "../products/FlashSalesProduct";
 
 const GiftCouponCard = () => {
   const [userInputCode, setUserInputCode] = useState("");
-  const { coupon, isCouponApplied, getCoupon, applyCoupon, removeCoupon } =
-    useShopContext();
+  const [cookies] = useCookies(["access_token"]);
+  const {
+    userID,
+    calculateTotals,
+    setCoupon,
+    isCouponApplied,
+    setIsCouponApplied,
+    coupon,
+    removeCoupon,
+  } = useCartStore();
+
+  const { data, isError, error } = useQuery({
+    queryKey: ["coupon", userID],
+    queryFn: () => getCoupon(cookies.access_token, userID),
+    enabled: !!userID && !!cookies.access_token,
+  });
+
+  const mutation = useMutation({
+    mutationFn: (code: string) =>
+      applyCoupon(code, cookies.access_token, userID),
+    onSuccess: () => {
+      if (data) {
+        // Check if data is defined
+        toast.success("Coupon applied", { id: "applyCoupon" });
+        setCoupon(data); // Only setCoupon if data is not null or undefined
+        setIsCouponApplied(true);
+        calculateTotals();
+      } else {
+        toast.error("Coupon data is invalid.");
+      }
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      if (error.response?.status === 429) {
+        toast.error(
+          error.response?.data?.error ||
+            "Too many requests, please try again later.",
+          { id: "applyCoupon" }
+        );
+      }
+      toast.error("Failed to apply coupon");
+      console.error("apply coupon Mutation error:", error);
+    },
+  });
 
   useEffect(() => {
-    getCoupon();
-  }, [getCoupon]);
-
+    if (isError) {
+      console.error("get coupon error:", error);
+      toast.error("Failed to get coupon");
+    }
+  }, [isError, error]);
+  useEffect(() => {
+    if (data) {
+      setCoupon(data);
+      calculateTotals();
+    }
+  }, [data, setCoupon, calculateTotals]);
   useEffect(() => {
     if (coupon) setUserInputCode(coupon.code);
   }, [coupon]);
 
   const handleApplyCoupon = () => {
-    if (!userInputCode) return;
-    applyCoupon(userInputCode);
+    if (!userInputCode.trim()) {
+      toast.error("Please enter a code");
+      return;
+    }
+
+    mutation.mutate(userInputCode.trim());
   };
 
-  const handleRemoveCoupon = async () => {
-    await removeCoupon();
+  const handleRemoveCoupon = () => {
+    removeCoupon();
     setUserInputCode("");
   };
 
@@ -44,17 +103,18 @@ const GiftCouponCard = () => {
 
         <button
           type="button"
+          disabled={mutation.isPending}
           className="flex w-full items-center justify-center rounded-lg bg-red-500 px-5 py-2.5 text-sm font-medium text-slate-200 hover:bg-red-700 cursor-pointer"
           onClick={handleApplyCoupon}
         >
-          Apply Code
+          {mutation.isPending ? "Applying..." : "Apply Code"}
         </button>
       </div>
       {isCouponApplied && coupon && (
         <div className="mt-4">
-          <h3 className="text-lg font-medium text-gray-300">Applied Coupon</h3>
+          <h3 className="text-lg font-medium text-gray-900">Applied Coupon</h3>
 
-          <p className="mt-2 text-sm text-gray-400">
+          <p className="mt-2 text-sm text-red-500">
             {coupon.code} - {coupon.discountPercentage}% off
           </p>
 
@@ -70,10 +130,10 @@ const GiftCouponCard = () => {
 
       {coupon && (
         <div className="mt-4">
-          <h3 className="text-lg font-medium text-gray-300">
+          <h3 className="text-lg font-medium text-gray-900">
             Your Available Coupon:
           </h3>
-          <p className="mt-2 text-sm text-gray-400">
+          <p className="mt-2 text-sm text-red-500">
             {coupon.code} - {coupon.discountPercentage}% off
           </p>
         </div>

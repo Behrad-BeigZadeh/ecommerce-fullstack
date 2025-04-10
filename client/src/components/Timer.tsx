@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { TbRectangleVerticalFilled } from "react-icons/tb";
 
 export default function Timer() {
-  const endTime = new Date("March 29, 2025").getTime();
+  const endTime = new Date("March 29, 2026").getTime();
   const [days, setDays] = useState(0);
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
@@ -28,7 +28,7 @@ export default function Timer() {
     return () => clearInterval(timerId);
   }, [endTime]);
   return (
-    <section className="flex flex-col  justify-center sm:ml-[10%] ml-2">
+    <section className="flex flex-col  justify-center ml-[5%]">
       <div className="flex  text-red-500 items-center mt-10  font-semibold">
         <TbRectangleVerticalFilled className="text-3xl" />
         <p className="text-2xl">Today's</p>
@@ -39,7 +39,7 @@ export default function Timer() {
           <div className="mx-2 ">
             <p className="font-semibold text-[12px]">Day</p>
             <div className="font-bold sm:text-2xl flex sm:px-2">
-              {days} <p className="text-red-500 ml-[50%]">:</p>
+              {days} <p className="text-red-500 ml-[30%]">:</p>
             </div>
           </div>
           <div className="mx-2">

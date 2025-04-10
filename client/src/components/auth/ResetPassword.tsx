@@ -1,13 +1,19 @@
-import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
+
+interface ErrorResponse {
+  errors: { msg: string }[];
+  message: string;
+  error: string;
+}
 
 export default function ResetPassword() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [resetToken, setResetToken] = useState("");
-  const [submitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
 
@@ -23,42 +29,48 @@ export default function ResetPassword() {
     }
   }, [location.search]);
 
-  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    if (password !== confirmPassword) {
-      toast.error("Passwords are not matched");
-      setIsSubmitting(false);
-      return;
-    }
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/auth/reset-password`,
-        {
-          token: resetToken,
-          newPassword: password,
-        }
-      );
+  const resetPasswordRequest = async (newPassword: string) => {
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/api/auth/reset-password`,
+      {
+        token: resetToken,
+        newPassword: newPassword,
+      }
+    );
+    return response.data;
+  };
 
-      toast.success(response.data.message);
-
+  const mutation = useMutation({
+    mutationFn: resetPasswordRequest,
+    onSuccess: () => {
+      toast.success("Password reset successfully!");
       navigate("/login");
-    } catch (error) {
-      setIsSubmitting(false);
-      console.log("error in reset password", error);
-      if (error.status == 429) {
-        toast.error(error.response.data.error, { id: "resetPassword" });
-        setIsSubmitting(false);
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      if (error.response?.status === 429) {
+        toast.error(
+          error.response?.data?.error ||
+            "Too many requests, please try again later.",
+          { id: "resetPassword" }
+        );
         return;
       }
 
       toast.error(
-        error.response.data.message || error.response.data.errors[0].msg,
+        error.response?.data?.message ||
+          error.response?.data?.errors?.[0]?.msg ||
+          "An unknown error occurred.",
         { id: "resetPassword" }
       );
-    } finally {
-      setIsSubmitting(false);
+    },
+  });
+
+  const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      return toast.error("Passwords do not match", { id: "resetPassword" });
     }
+    mutation.mutate(password);
   };
 
   return (
@@ -101,7 +113,7 @@ export default function ResetPassword() {
             type="submit"
             className="bg-red-500 whitespace-nowrap   mr-[3%] p-1 sm:p-2 text-zinc-200 rounded-md cursor-pointer hover:bg-red-600 w-full"
           >
-            {submitting ? "Submitting..." : " Submit"}
+            {mutation.isPending ? "Submitting..." : " Submit"}
           </button>
         </div>
       </div>

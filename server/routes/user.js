@@ -101,7 +101,7 @@ router.post(
         return res.status(400).json({ message: "User not found" });
       }
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "3h",
+        expiresIn: "1d",
       });
 
       var transporter = nodemailer.createTransport({
@@ -115,7 +115,7 @@ router.post(
         from: process.env.MY_EMAIL,
         to: email,
         subject: "Forgot Password",
-        text: `http://localhost:5173/reset-password?token=${token}`,
+        text: `${process.env.CLIENT_URL}/reset-password?token=${token}`,
       };
 
       transporter.sendMail(mailOptions, function (error, info) {

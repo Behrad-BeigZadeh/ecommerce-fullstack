@@ -1,50 +1,68 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useMutation } from "@tanstack/react-query";
+
+interface ErrorResponse {
+  message?: string;
+  error?: string;
+  errors?: { msg: string }[];
+}
 
 export default function Signup() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [submitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    if (password !== confirmPassword) {
-      setIsSubmitting(false);
-      return toast.error("Passwords do not match", { id: "signup" });
-    }
-    try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/auth/signup`,
-        {
-          email,
-          password,
-        }
-      );
-
-      toast.success(res?.data.message);
+  const signupUser = async (userData: { email: string; password: string }) => {
+    const { data } = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/api/auth/signup`,
+      userData
+    );
+    return data;
+  };
+  const mutation = useMutation({
+    mutationFn: signupUser,
+    onSuccess: (data) => {
+      toast.success(data.message);
       navigate("/login");
-    } catch (error) {
-      setIsSubmitting(false);
-      console.log("error in signup", error);
-      if (error.status == 429) {
-        toast.error(error.response.data.error, { id: "signup" });
-        setIsSubmitting(false);
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      if (error.response?.status === 429) {
+        toast.error(
+          error.response?.data?.error ||
+            "Too many requests, please try again later.",
+          { id: "signup" }
+        );
         return;
       }
 
       toast.error(
-        error.response.data.message || error.response.data.errors[0].msg,
+        error.response?.data?.message ||
+          error.response?.data?.errors?.[0]?.msg ||
+          "An unknown error occurred.",
         { id: "signup" }
       );
-    } finally {
-      setIsSubmitting(false);
+    },
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      return toast.error("Passwords do not match", { id: "signup" });
     }
+    const { confirmPassword, ...rest } = formData;
+    mutation.mutate(rest);
   };
 
   return (
@@ -71,24 +89,27 @@ export default function Signup() {
 
         <div className="flex flex-col pt-6 ">
           <input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
             type="email"
             required
             placeholder="Email"
             className=" border-b border-zinc-400 outline-none  w-[60%] sm:w-full"
           />
           <input
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
             type="password"
             required
             placeholder="Password"
             className=" border-b border-zinc-400 outline-none  w-[60%] sm:w-full"
           />
           <input
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
             type="password"
             required
             placeholder="Confirm Password"
@@ -98,10 +119,11 @@ export default function Signup() {
 
         <div className="pt-6 flex items-center">
           <button
+            disabled={mutation.isPending}
             type="submit"
             className="bg-red-500 whitespace-nowrap   mr-[3%] p-1 sm:p-2 text-zinc-200 rounded-md cursor-pointer hover:bg-red-600 w-full"
           >
-            {submitting ? "Submitting..." : " Sign Up"}
+            {mutation.isPending ? "Submitting..." : " Sign Up"}
           </button>
         </div>
         <p className=" whitespace-nowrap text-center mt-4 text-[12px] sm:text-[15px] ">

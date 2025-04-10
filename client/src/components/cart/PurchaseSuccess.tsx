@@ -1,54 +1,77 @@
-import { useShopContext } from "@/contexts/Context";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import useCartStore from "@/stores/cartStore";
+import { useMutation } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
 import Confetti from "react-confetti";
 import { useCookies } from "react-cookie";
 import { FiCheckCircle } from "react-icons/fi";
 import { RiArrowRightLine } from "react-icons/ri";
 import { TbHeartHandshake } from "react-icons/tb";
+import { checkoutSuccess, clearCart } from "../../api/api";
+import toast from "react-hot-toast";
+import { AxiosError } from "axios";
+import { ErrorResponse } from "../products/FlashSalesProduct";
 
 const PurchaseSuccessPage = () => {
-  const {userID} = useCartStore() 
+  const { userID, setCartItems } = useCartStore();
   const [cookies] = useCookies(["access_token"]);
-  const [error, setError] = useState(null);
+  const [hasCompletedCheckout, setHasCompletedCheckout] = useState(false);
+  const [completedSessionId, setCompletedSessionId] = useState<string | null>(
+    null
+  );
+
+  const sessionId = new URLSearchParams(window.location.search).get(
+    "session_id"
+  );
+
+  const mutation = useMutation({
+    mutationFn: (sessionId: string) =>
+      checkoutSuccess(sessionId, cookies.access_token, userID),
+    onSuccess: (data) => {
+      if (data && data.stripeSessionId) {
+        setCompletedSessionId(data.stripeSessionId); // Access stripeSessionId here
+        setHasCompletedCheckout(true);
+        toast.success("Purchase Was Successful");
+        clearCart(cookies.access_token, userID);
+        setCartItems([]);
+        return;
+      } else {
+        toast.error("Invalid session data");
+      }
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      if (error.response?.status === 429) {
+        toast.error(
+          error.response?.data?.error ||
+            "Too many requests, please try again later.",
+          { id: "checkout" }
+        );
+        return;
+      }
+      toast.error("Failed to checkout", { id: "checkout" });
+      console.error("checkout success Mutation error:", error);
+    },
+  });
+
+  const hasRunRef = useRef(false);
 
   useEffect(() => {
-    const handleCheckoutSuccess = async (sessionId) => {
-      try {
-        await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/api/payments/checkout-success`,
-          {
-            sessionId,
-          },
-          {
-            headers: {
-              Authorization: cookies.access_token,
-              userID,
-            },
-          }
-        );
-        clearCart();
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIsProcessing(false);
-      }
-    };
-
-    const sessionId = new URLSearchParams(window.location.search).get(
-      "session_id"
-    );
-    if (sessionId) {
-      handleCheckoutSuccess(sessionId);
-    } else {
-      setIsProcessing(false);
-      setError("No session ID found in the URL");
+    if (
+      sessionId &&
+      !hasRunRef.current &&
+      !hasCompletedCheckout &&
+      sessionId !== completedSessionId &&
+      !mutation.isPending
+    ) {
+      hasRunRef.current = true; // block future runs
+      mutation.mutate(sessionId);
     }
-  }, [clearCart]);
-
-  if (isProcessing) return "Processing...";
-
-  if (error) return `Error: ${error}`;
+  }, [
+    sessionId,
+    mutation.isPending,
+    hasCompletedCheckout,
+    completedSessionId,
+    mutation,
+  ]);
 
   return (
     <div className="h-screen flex items-center justify-center px-4">

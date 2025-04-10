@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     const products = await productModel.find({});
-    console.log(products);
+
     res.status(201).json(products);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -26,7 +26,6 @@ router.delete("/clear-cart", async (req, res) => {
     }
 
     await user.save();
-    console.log(user);
     res.status(201).json({ message: "Cart Cleared Successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -43,7 +42,7 @@ router.post("/add-to-cart", verifyToken, async (req, res) => {
     }
 
     const existingItem = user.cartItems.find((item) => item.id === productID);
-    console.log(existingItem);
+
     if (existingItem) {
       existingItem.quantity += 1;
     } else {
@@ -52,12 +51,36 @@ router.post("/add-to-cart", verifyToken, async (req, res) => {
     await user.save();
     res.json(user.cartItems);
   } catch (error) {
-    console.log("Error in addToCart controller", error.message);
+    console.log("Error in addToCart route", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 
-router.post("/checkout", verifyToken, async (req, res) => {});
+router.get("/purchased-items", verifyToken, async (req, res) => {
+  try {
+    const userID = req.headers.userid;
+    const user = await UserModel.findById(userID);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.purchasedItems && user.purchasedItems.length > 0) {
+      const purchasedItems = await productModel.find({
+        _id: { $in: user.purchasedItems },
+      });
+
+      return res.status(200).json(purchasedItems);
+    } else {
+      return res.status(200).json([]);
+    }
+  } catch (error) {
+    console.error("Error fetching purchased items:", error);
+    return res.status(500).json({
+      message: "Error fetching purchased items",
+      error: error.message,
+    });
+  }
+});
 
 router.get("/cart-items", verifyToken, async (req, res) => {
   try {
@@ -81,7 +104,7 @@ router.get("/cart-items", verifyToken, async (req, res) => {
 
     res.json(cartItems);
   } catch (error) {
-    console.log("Error in getCartProducts controller", error.message);
+    console.log("Error in getCartProducts route", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -95,7 +118,6 @@ router.post("/update-cart/:id", verifyToken, async (req, res) => {
     const user = await UserModel.findById(userID);
 
     const existingItem = user.cartItems.find((item) => item.id === productID);
-
     if (existingItem) {
       existingItem.quantity = quantity;
 
@@ -106,7 +128,7 @@ router.post("/update-cart/:id", verifyToken, async (req, res) => {
       res.status(404).json({ message: "Product not found" });
     }
   } catch (error) {
-    console.log("Error in updateProduct controller", error.message);
+    console.log("Error in updateProduct route", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -129,7 +151,7 @@ router.delete("/:id", verifyToken, async (req, res) => {
     await user.save();
     res.status(201).json({ message: "Product Deleted Successfully" });
   } catch (error) {
-    console.log("Error in updateProduct controller", error.message);
+    console.log("Error in updateProduct route", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });

@@ -1,4 +1,4 @@
-import { useShopContext } from "@/contexts/Context";
+import useCartStore from "@/stores/cartStore";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import { useCookies } from "react-cookie";
@@ -8,7 +8,8 @@ const stripePromise = loadStripe(
 );
 console.log(stripePromise);
 const Order = () => {
-  const { total, subtotal, coupon, isCouponApplied, cart } = useShopContext();
+  const { total, subtotal, coupon, isCouponApplied, cartItems } =
+    useCartStore();
 
   const savings = subtotal - total;
   const formattedSubtotal = subtotal.toFixed(2);
@@ -18,28 +19,32 @@ const Order = () => {
   const [cookies] = useCookies(["access_token"]);
 
   const handlePayment = async () => {
-    const stripe = await stripePromise;
-    const res = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/api/payments/create-checkout-session`,
-      {
-        products: cart,
-        couponCode: coupon ? coupon.code : null,
-      },
-      {
-        headers: {
-          Authorization: cookies.access_token,
-          userID,
+    try {
+      const stripe = await stripePromise;
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/payments/create-checkout-session`,
+        {
+          products: cartItems,
+          couponCode: coupon ? coupon.code : null,
         },
+        {
+          headers: {
+            Authorization: cookies.access_token,
+            userID,
+          },
+        }
+      );
+
+      const session = res.data;
+      const result = await stripe?.redirectToCheckout({
+        sessionId: session.id,
+      });
+
+      if (result?.error) {
+        console.error("Error:", result.error);
       }
-    );
-
-    const session = res.data;
-    const result = await stripe.redirectToCheckout({
-      sessionId: session.id,
-    });
-
-    if (result.error) {
-      console.error("Error:", result.error);
+    } catch (error) {
+      console.log("Error finalizing order", error);
     }
   };
 

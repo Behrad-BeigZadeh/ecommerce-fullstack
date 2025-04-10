@@ -1,12 +1,22 @@
-import { useShopContext } from "@/contexts/Context";
 import { useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { IoMenu } from "react-icons/io5";
 import { BsCartCheckFill } from "react-icons/bs";
 import { SlBasket } from "react-icons/sl";
+import useCartStore from "@/stores/cartStore";
+import { useCookies } from "react-cookie";
+import useSearchStore from "@/stores/searchStore";
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { cart } = useShopContext();
+  const { cartItems, userID, setUserID } = useCartStore();
+  const [cookies, , removeCookie] = useCookies(["access_token"]);
+  const { searchQuery, setSearchQuery } = useSearchStore();
+  const logout = async () => {
+    window.localStorage.removeItem("userID");
+    setUserID("");
+    removeCookie("access_token");
+  };
+
   return (
     <div className="w-full h-full  ">
       <header className="flex justify-between items-center py-6 px-8 md:px-32 border border-zinc-300 ">
@@ -22,29 +32,40 @@ export default function Header() {
             Home
           </a>
           <a
-            href="/"
+            href="/contact"
             className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-105"
           >
             Contact
           </a>
           <a
-            href="/"
+            href="/about"
             className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-105"
           >
             About
           </a>
-          <a
-            href="/signup"
-            className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-105"
-          >
-            SignUp
-          </a>
+          {userID && cookies.access_token ? (
+            <button
+              onClick={logout}
+              className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-105 cursor-pointer"
+            >
+              Logout
+            </button>
+          ) : (
+            <a
+              href="/signup"
+              className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-105"
+            >
+              SignUp
+            </a>
+          )}
         </section>
         <section className="relative hidden sm:flex items-center justify-center gap-3">
           <button className="absolute left-2 text-2xl">
             <CiSearch />
           </button>
           <input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             type="text"
             placeholder="Search..."
             className="py-1 pl-10 rounded-xl border-2 border-black"
@@ -56,12 +77,12 @@ export default function Header() {
 
             <a href="/cart-items" className="relative">
               <SlBasket className="text-2xl cursor-pointer" />
-              {cart.length > 0 ? (
+              {cartItems.length > 0 && userID && cookies.access_token ? (
                 <p
                   className="absolute -top-2 left-2 bg-red-500 text-white rounded-full px-2 py-0.5 
 									text-xs"
                 >
-                  {cart.length}
+                  {cartItems.length}
                 </p>
               ) : (
                 ""
@@ -80,6 +101,15 @@ export default function Header() {
             isMenuOpen ? "block z-10" : "hidden"
           }`}
         >
+          <div className="w-[80%] mt-5">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full py-2 px-4 rounded-xl border-2 border-zinc-600 text-zinc-400"
+            />
+          </div>
           <a
             href="/"
             className="w-full text-center p-4 transition-all  hover:text-zinc-600 hover:scale-105 "
@@ -87,28 +117,44 @@ export default function Header() {
             Home
           </a>
           <a
-            href="/"
+            href="/contact"
             className="w-full text-center p-4 transition-all  hover:text-zinc-600 hover:scale-105 "
           >
             Contact
           </a>
+          {userID && cookies.access_token ? (
+            <button
+              onClick={logout}
+              className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-105 cursor-pointer"
+            >
+              Logout
+            </button>
+          ) : (
+            <a
+              href="/signup"
+              className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-105"
+            >
+              SignUp
+            </a>
+          )}
           <a
-            href="/"
+            href="/about"
             className="w-full text-center p-4 transition-all  hover:text-zinc-600 hover:scale-105 "
           >
             About
           </a>
-          <a
-            href="/signup"
-            className="w-full text-center p-4 transition-all  hover:text-zinc-600 hover:scale-105 "
-          >
-            SignUp
-          </a>
+
           <a
             href="/cart-items"
             className="w-full text-center p-4 transition-all  hover:text-zinc-600 hover:scale-105 "
           >
             Cart
+          </a>
+          <a
+            href="/purchased-items"
+            className="w-full text-center p-4 transition-all  hover:text-zinc-600 hover:scale-105 "
+          >
+            Purchased Items
           </a>
         </div>
       </header>
