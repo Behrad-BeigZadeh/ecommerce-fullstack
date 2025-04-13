@@ -19,6 +19,7 @@ const GiftCouponCard = () => {
     coupon,
     removeCoupon,
   } = useCartStore();
+  console.log(isCouponApplied);
 
   const { data, isError, error } = useQuery({
     queryKey: ["coupon", userID],
@@ -33,7 +34,7 @@ const GiftCouponCard = () => {
       if (data) {
         // Check if data is defined
         toast.success("Coupon applied", { id: "applyCoupon" });
-        setCoupon(data); // Only setCoupon if data is not null or undefined
+        setCoupon(data);
         setIsCouponApplied(true);
         calculateTotals();
       } else {
@@ -50,6 +51,7 @@ const GiftCouponCard = () => {
       }
       toast.error("Failed to apply coupon");
       console.error("apply coupon Mutation error:", error);
+      setIsCouponApplied(false);
     },
   });
 
@@ -59,15 +61,19 @@ const GiftCouponCard = () => {
       toast.error("Failed to get coupon");
     }
   }, [isError, error]);
+
+  useEffect(() => {
+    if (coupon && coupon.isActive) {
+      setUserInputCode(coupon.code);
+    }
+  }, [coupon]);
+
   useEffect(() => {
     if (data) {
       setCoupon(data);
       calculateTotals();
     }
   }, [data, setCoupon, calculateTotals]);
-  useEffect(() => {
-    if (coupon) setUserInputCode(coupon.code);
-  }, [coupon]);
 
   const handleApplyCoupon = () => {
     if (!userInputCode.trim()) {
@@ -81,6 +87,7 @@ const GiftCouponCard = () => {
   const handleRemoveCoupon = () => {
     removeCoupon();
     setUserInputCode("");
+    setIsCouponApplied(false);
   };
 
   return (
@@ -128,7 +135,7 @@ const GiftCouponCard = () => {
         </div>
       )}
 
-      {coupon && (
+      {coupon && coupon.isActive && (
         <div className="mt-4">
           <h3 className="text-lg font-medium text-gray-900">
             Your Available Coupon:

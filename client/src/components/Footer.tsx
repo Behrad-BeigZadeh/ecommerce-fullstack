@@ -55,21 +55,22 @@ export default function Footer() {
             <p className="text-sm mb-6 font-light text-[10px] sm:text-sm">
               save 3$ with App New User Only
             </p>
-            <div className="flex ">
+            <div className="flex flex-row flex-wrap items-center gap-4">
               <QRCode
-                className="w-10 sm:w-20 p-0.5  h-18 bg-zinc-200 "
+                className="bg-white p-1 rounded"
                 value="https://media.istockphoto.com/id/1347277582/vector/qr-code-sample-for-smartphone-scanning-on-white-background.jpg?s=612x612&w=0&k=20&c=6e6Xqb1Wne79bJsWpyyNuWfkrUgNhXR4_UYj3i_poc0="
+                size={64}
               />
-              <div>
+              <div className="flex flex-col gap-2">
                 <img
-                  className="w-30"
+                  className="w-[100px]"
                   src="https://joshbuchea.com/images/notes/app-store-badge-android-get-it-on-google-play.png"
-                  alt="image"
+                  alt="Google Play"
                 />
                 <img
-                  className="w-30"
+                  className="w-[100px]"
                   src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Download_on_the_App_Store_Badge.svg/2560px-Download_on_the_App_Store_Badge.svg.png"
-                  alt="image"
+                  alt="App Store"
                 />
               </div>
             </div>

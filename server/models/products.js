@@ -10,9 +10,10 @@ const productSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    PreviousPrice: {
+    previousPrice: {
       type: Number,
-      required: true,
+      required: false,
+      default: null,
     },
     price: {
       type: Number,
@@ -20,7 +21,13 @@ const productSchema = mongoose.Schema(
     },
     offPercent: {
       type: Number,
+      required: false,
+      default: null,
+    },
+    stockQuantity: {
+      type: Number,
       required: true,
+      min: 0,
     },
   },
   { timestamps: true }

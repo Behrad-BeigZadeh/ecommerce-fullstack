@@ -5,12 +5,14 @@ import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { useMutation } from "@tanstack/react-query";
+import { useAdminStore } from "@/stores/adminStore";
 
 interface ErrorResponse {
   message: string;
 }
 
 export default function Login() {
+  const { setUserRole } = useAdminStore();
   const [, setCookies] = useCookies(["access_token"]);
   const [formData, setFormData] = useState({
     email: "",
@@ -32,6 +34,7 @@ export default function Login() {
     onSuccess: (data) => {
       setCookies("access_token", data.token);
       window.localStorage.setItem("userID", data.userID);
+      setUserRole(data.userRole);
       toast.success(data.message);
       navigate("/");
     },

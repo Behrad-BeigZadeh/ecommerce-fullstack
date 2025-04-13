@@ -6,11 +6,14 @@ import { SlBasket } from "react-icons/sl";
 import useCartStore from "@/stores/cartStore";
 import { useCookies } from "react-cookie";
 import useSearchStore from "@/stores/searchStore";
+import { FaCircleUser } from "react-icons/fa6";
+import { useAdminStore } from "@/stores/adminStore";
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { cartItems, userID, setUserID } = useCartStore();
   const [cookies, , removeCookie] = useCookies(["access_token"]);
   const { searchQuery, setSearchQuery } = useSearchStore();
+  const { userRole } = useAdminStore();
   const logout = async () => {
     window.localStorage.removeItem("userID");
     setUserID("");
@@ -20,40 +23,40 @@ export default function Header() {
   return (
     <div className="w-full h-full  ">
       <header className="flex justify-between items-center py-6 px-8 md:px-32 border border-zinc-300 ">
-        <a href="/" className=" w-52 transition-all  font-bold text-2xl ">
+        <a href="/" className=" w-52   font-bold text-2xl ">
           Exclusive
         </a>
 
-        <section className="hidden xl:flex items-center gap-12 font-semibold text-base ">
+        <section className="hidden xl:flex items-center gap-12 font-semibold ">
           <a
             href="/"
-            className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-105"
+            className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-110"
           >
             Home
           </a>
           <a
             href="/contact"
-            className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-105"
+            className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-110"
           >
             Contact
           </a>
           <a
             href="/about"
-            className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-105"
+            className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-110"
           >
             About
           </a>
           {userID && cookies.access_token ? (
             <button
               onClick={logout}
-              className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-105 cursor-pointer"
+              className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-110 cursor-pointer"
             >
               Logout
             </button>
           ) : (
             <a
               href="/signup"
-              className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-105"
+              className="p-3 transition-all rounded-md hover:text-zinc-600 hover:scale-110"
             >
               SignUp
             </a>
@@ -89,6 +92,11 @@ export default function Header() {
               )}
             </a>
           </div>
+          {userRole === "admin" && userID && cookies.access_token && (
+            <a href="/admin-dashboard" className="cursor-pointer text-2xl">
+              <FaCircleUser />
+            </a>
+          )}
         </section>
         <button
           className="xl:hidden block text-4xl sm:text-5xl  cursor-pointer"
@@ -112,7 +120,7 @@ export default function Header() {
           </div>
           <a
             href="/"
-            className="w-full text-center p-4 transition-all  hover:text-zinc-600 hover:scale-105 "
+            className="w-full text-center p-4 transition-all  hover:text-zinc-600 hover:scale-110 "
           >
             Home
           </a>
@@ -156,6 +164,14 @@ export default function Header() {
           >
             Purchased Items
           </a>
+          {userRole === "admin" && userID && cookies.access_token && (
+            <a
+              href="/admin-dashboard"
+              className="w-full text-center p-4 transition-all  hover:text-zinc-600 hover:scale-105 "
+            >
+              Admin Panel
+            </a>
+          )}
         </div>
       </header>
     </div>

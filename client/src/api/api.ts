@@ -3,7 +3,7 @@ import { CouponType } from "@/stores/cartStore";
 import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
 
-interface ErrorMessageType {
+export interface ErrorMessageType {
   message: string;
 }
 
@@ -39,8 +39,7 @@ export const fetchCartItems = async (
 
     console.error(
       "Failed to fetch cart items:",
-      err.response?.data || err.message,
-      { id: "fetchCart" }
+      err.response?.data || err.message
     );
 
     toast.error(err.response?.data?.message || "Failed to get items");
@@ -71,8 +70,7 @@ export const addToCartAPI = async (
 
     console.error(
       "Failed to fetch Add cart items:",
-      err.response?.data || err.message,
-      { id: "addItems" }
+      err.response?.data || err.message
     );
 
     toast.error(err.response?.data?.message || "Failed to add item to cart");
@@ -100,8 +98,7 @@ export const updateCartItemAPI = async ({
 
     console.error(
       "Failed to update cart items quantity:",
-      err.response?.data || err.message,
-      { id: "updateCart" }
+      err.response?.data || err.message
     );
     toast.error(err.response?.data?.message || "Failed to update cart items");
     throw err;
@@ -131,8 +128,7 @@ export const removeCartItemAPI = async ({
 
     console.error(
       "Failed to update cart items quantity:",
-      err.response?.data || err.message,
-      { id: "deleteCartItem" }
+      err.response?.data || err.message
     );
     toast.error(err.response?.data?.message || "Failed to fetch cart items");
     throw err;
@@ -153,8 +149,7 @@ export const clearCart = async (access_token: string, userID: string) => {
 
     console.error(
       "Failed to update cart items quantity:",
-      err.response?.data || err.message,
-      { id: "deleteCartItem" }
+      err.response?.data || err.message
     );
     toast.error(err.response?.data?.message || "Failed to fetch cart items");
     throw err;
@@ -179,7 +174,9 @@ export const getCoupon = async (
     return res.data;
   } catch (error) {
     const err = error as AxiosError<ErrorMessageType>;
-    toast.error(err.response?.data?.message || "Failed to get coupon");
+    toast.error(err.response?.data?.message || "Failed to get coupon", {
+      id: "coupon",
+    });
     console.error("Error fetching coupon:", error);
     throw err;
   }
@@ -204,7 +201,9 @@ export const applyCoupon = async (
     return res.data;
   } catch (error) {
     const err = error as AxiosError<ErrorMessageType>;
-    toast.error(err.response?.data?.message || "Failed to apply coupon");
+    toast.error(err.response?.data?.message || "Failed to apply coupon", {
+      id: "coupon",
+    });
     throw err;
   }
 };
@@ -232,7 +231,11 @@ export const checkoutSuccess = async (
     return res.data;
   } catch (error) {
     const err = error as AxiosError<ErrorMessageType>;
-    toast.error(err.response?.data?.message || "Failed to checkout");
+    toast.error(err.response?.data?.message || "Failed to checkout", {
+      id: "checkout",
+    });
+    console.error("Error fetching coupon:", error);
+
     throw err;
   }
 };
@@ -262,18 +265,47 @@ export const getPurchasedItems = async (
 
     console.error(
       "Failed to fetch cart items:",
-      err.response?.data || err.message,
-      { id: "fetchCart" }
+      err.response?.data || err.message
     );
 
-    toast.error(err.response?.data?.message || "Failed to get items");
+    toast.error(err.response?.data?.message || "Failed to get items", {
+      id: "purchased_items",
+    });
     throw err;
   }
 };
 
-//get main page products
+//get flash sale products
 
-export const getProducts = async () => {
+export const getFlashSaleProducts = async () => {
+  try {
+    const { data } = await axios.get(
+      `${import.meta.env.VITE_BASE_URL}/api/products/flash-sales`,
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    return data;
+  } catch (error) {
+    const err = error as AxiosError<ErrorMessageType>;
+
+    console.error(
+      "Failed to fetch  items:",
+      err.response?.data || err.message,
+      { id: "fetchProducts" }
+    );
+
+    toast.error(err.response?.data?.message || "Failed to get products", {
+      id: "fetchProducts",
+    });
+    throw err;
+  }
+};
+
+//get regular products
+
+export const getRegularProducts = async () => {
   try {
     const { data } = await axios.get(
       `${import.meta.env.VITE_BASE_URL}/api/products`,
@@ -292,7 +324,9 @@ export const getProducts = async () => {
       { id: "fetchProducts" }
     );
 
-    toast.error(err.response?.data?.message || "Failed to get products");
+    toast.error(err.response?.data?.message || "Failed to get products", {
+      id: "fetchProducts",
+    });
     throw err;
   }
 };

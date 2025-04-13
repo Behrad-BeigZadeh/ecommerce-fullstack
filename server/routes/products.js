@@ -5,12 +5,36 @@ import { productModel } from "../models/products.js";
 
 const router = express.Router();
 
+router.get("/flash-sales", async (req, res) => {
+  try {
+    // Fetch products that have offPercent and previousPrice (flash sales)
+    const products = await productModel.find({
+      offPercent: { $exists: true, $ne: null },
+      previousPrice: { $exists: true, $ne: null },
+    });
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.log("Error in fetching flash sale products route:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Fetch regular products
 router.get("/", async (req, res) => {
   try {
-    const products = await productModel.find({});
-
-    res.status(201).json(products);
+    const products = await productModel.find({
+      $or: [
+        { offPercent: { $exists: false } },
+        { offPercent: null },
+        { previousPrice: { $exists: false } },
+        { previousPrice: null },
+      ],
+    });
+    console.log(products);
+    res.status(200).json(products);
   } catch (error) {
+    console.log("Error in fetching flash sale products route:", error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -28,6 +52,7 @@ router.delete("/clear-cart", async (req, res) => {
     await user.save();
     res.status(201).json({ message: "Cart Cleared Successfully" });
   } catch (error) {
+    console.log("Error in clearCart route", error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -51,7 +76,7 @@ router.post("/add-to-cart", verifyToken, async (req, res) => {
     await user.save();
     res.json(user.cartItems);
   } catch (error) {
-    console.log("Error in addToCart route", error.message);
+    console.log("Error in addToCart route", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -104,7 +129,7 @@ router.get("/cart-items", verifyToken, async (req, res) => {
 
     res.json(cartItems);
   } catch (error) {
-    console.log("Error in getCartProducts route", error.message);
+    console.log("Error in getCartProducts route", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -128,7 +153,7 @@ router.post("/update-cart/:id", verifyToken, async (req, res) => {
       res.status(404).json({ message: "Product not found" });
     }
   } catch (error) {
-    console.log("Error in updateProduct route", error.message);
+    console.log("Error in updateProduct route", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -151,7 +176,7 @@ router.delete("/:id", verifyToken, async (req, res) => {
     await user.save();
     res.status(201).json({ message: "Product Deleted Successfully" });
   } catch (error) {
-    console.log("Error in updateProduct route", error.message);
+    console.log("Error in updateProduct route", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });

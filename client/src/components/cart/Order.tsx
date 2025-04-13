@@ -61,7 +61,7 @@ const Order = () => {
         <p>Shipping</p>
         <p>free</p>
       </div>
-      {savings > 0 && (
+      {coupon && isCouponApplied && savings > 0 && (
         <div className="flex items-center justify-between font-semibold py-2">
           <p>Savings</p>
           <p>-${formattedSavings}</p>

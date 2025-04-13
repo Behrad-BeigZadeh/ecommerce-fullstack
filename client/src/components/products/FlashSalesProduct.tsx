@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { addToCartAPI } from "../../api/api";
 
-interface Props {
+export interface Props {
   product: productType;
 }
 export interface ErrorResponse {
@@ -19,7 +19,8 @@ export interface ErrorResponse {
 export default function FlashSalesProduct(props: Props) {
   const { addToCart, userID } = useCartStore();
   const [cookies] = useCookies(["access_token"]);
-  const { offPercent, imageUrl, price, name, previousPrice } = props.product;
+  const { offPercent, imageUrl, price, name, previousPrice, stockQuantity } =
+    props.product;
   const navigate = useNavigate();
   const product = props.product;
   const queryClient = useQueryClient();
@@ -51,7 +52,7 @@ export default function FlashSalesProduct(props: Props) {
   });
 
   const handleAddToCart = () => {
-    if (!cookies.access_token) {
+    if (!cookies.access_token && !userID) {
       toast.error("Login to be able to add products to your cart", {
         id: "add_product",
       });
@@ -62,35 +63,49 @@ export default function FlashSalesProduct(props: Props) {
 
   return (
     <div className="w-200  flex flex-col justify-center  max-w-[80%]   mx-auto">
-      <div className="bg-zinc-200 w-full flex flex-col justify-center items-center rounded-t-xl p-5 ">
+      <div className="bg-white shadow-md rounded-lg  flex flex-col justify-center items-center rounded-t-xl p-5 ">
         <p className="bg-red-500  mr-[90%] -mt-[5%] font-semibold rounded-md p-1 text-zinc-300">
           -{offPercent}%
         </p>
         <img className="h-30" src={imageUrl} alt="image" />
       </div>
 
-      <button
-        onClick={handleAddToCart}
-        className="w-full rounded-b-xl  text-center p-2 bg-black text-zinc-300 text-xl cursor-pointer hover:bg-zinc-800  font-semibold"
-      >
-        Add To Cart
-      </button>
-      <div className="text-red-500"></div>
-      <div>
-        <p className="font-semibold my-1.5">{name}</p>
-        <div className="flex ">
-          <p className="text-red-500 font-medium">{price}$</p>
-          <p className="text-zinc-500 line-through px-3 font-medium">
-            {previousPrice}$
-          </p>
+      {stockQuantity > 0 && (
+        <button
+          onClick={handleAddToCart}
+          className="w-full rounded-b-xl  text-center p-2 bg-black text-zinc-300 text-xl cursor-pointer hover:bg-zinc-800  font-semibold"
+        >
+          Add To Cart
+        </button>
+      )}
+      <div className="flex justify-between ">
+        <div>
+          <p className="font-semibold my-1.5">{name}</p>
+          <div className="flex ">
+            <p className="text-red-500 font-medium">{price}$</p>
+            <p className="text-zinc-500 line-through px-3 font-medium">
+              {previousPrice}$
+            </p>
+          </div>
+          <div className="text-amber-300 flex mt-1.5">
+            <FaStar />
+            <FaStar />
+            <FaStar />
+            <FaStar />
+            <FaStar />
+          </div>
+        </div>{" "}
+        <div>
+          {stockQuantity > 0 ? (
+            <p className="text-zinc-500 font-medium text-sm my-2">
+              {stockQuantity} items left
+            </p>
+          ) : (
+            <p className="text-red-500 font-medium text-sm my-2">
+              Out of stock
+            </p>
+          )}
         </div>
-      </div>
-      <div className="text-amber-300 flex mt-1.5">
-        <FaStar />
-        <FaStar />
-        <FaStar />
-        <FaStar />
-        <FaStar />
       </div>
     </div>
   );

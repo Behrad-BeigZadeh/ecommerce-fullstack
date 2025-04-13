@@ -76,9 +76,12 @@ router.post(
         sameSite: "strict",
         maxAge: 24 * 60 * 60 * 1000,
       });
-      res
-        .status(200)
-        .json({ message: "Login Successful", token, userID: user._id });
+      res.status(200).json({
+        message: "Login Successful",
+        token,
+        userID: user._id,
+        userRole: user.role,
+      });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -163,18 +166,49 @@ router.post(
   }
 );
 
-export const verifyToken = (req, res, next) => {
-  const authHeader = req.headers.authorization;
+export const verifyToken = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({ message: "Not authorized" });
+    }
+    try {
+      const decoded = jwt.verify(authHeader, process.env.JWT_SECRET);
 
-  if (authHeader) {
-    jwt.verify(authHeader, process.env.JWT_SECRET, (err) => {
-      if (!authHeader) {
-        return res.status(401).json({ message: "Not authorized" });
+      const user = await UserModel.findById(decoded.id).select("-password");
+
+      if (!user) {
+        return res.status(401).json({ message: "User not found" });
       }
       next();
-    });
-  } else {
-    res.sendStatus(401);
+    } catch (error) {
+      if (error.name === "TokenExpiredError") {
+        return res
+          .status(401)
+          .json({ message: "Unauthorized - Access token expired" });
+      }
+      throw error;
+    }
+  } catch (error) {
+    console.log("Error in verifyToken middleware", error.message);
+    return res
+      .status(401)
+      .json({ message: "Unauthorized - Invalid access token" });
+  }
+};
+export const isAdmin = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+    const decoded = jwt.verify(authHeader, process.env.JWT_SECRET);
+    const user = await UserModel.findById(decoded.id).select("-password");
+    const isAdmin = user.role === "admin";
+    if (!isAdmin) {
+      res.status(403).json({ message: "access denied" });
+    }
+    next();
+  } catch (error) {
+    console.log("error in admin middleware", error);
+    return res.status(403).json({ message: "Access denied - Admin only" });
   }
 };
 

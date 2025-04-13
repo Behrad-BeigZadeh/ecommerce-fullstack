@@ -93,14 +93,14 @@ export const useCartStore = create<CartStore>(
           ),
         })),
       calculateTotals: () => {
-        const { cartItems, coupon } = get();
+        const { cartItems, coupon, isCouponApplied } = get();
         const subtotal = cartItems.reduce(
           (sum, item) => sum + item.price * item.quantity,
           0
         );
         let total = subtotal;
 
-        if (coupon) {
+        if (coupon && coupon.isActive && isCouponApplied) {
           const discount = subtotal * (coupon.discountPercentage / 100);
           total = subtotal - discount;
         }

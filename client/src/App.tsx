@@ -18,11 +18,18 @@ import { useEffect, useState } from "react";
 import { AboutPage } from "./components/About";
 import ContactPage from "./components/Contact";
 import { ClipLoader } from "react-spinners";
+import AdminPanel from "./components/admin/AdminPanel";
+import { useAdminStore } from "./stores/adminStore";
+import EditProduct from "./components/admin/EditProduct";
+import NotFoundPage from "./components/NotFoundPage";
+import AddProduct from "./components/admin/AddProduct";
 
 function App() {
   const { userID, setUserID } = useCartStore();
   const [cookies] = useCookies(["access_token"]);
   const [loading, setLoading] = useState(true); // Add loading state
+  const { userRole } = useAdminStore();
+  console.log(userRole);
 
   useEffect(() => {
     if (!userID) {
@@ -31,21 +38,23 @@ function App() {
         setUserID(storedUserID);
       }
     }
-    setLoading(false); // Set loading to false once the check is done
+    setLoading(false);
   }, [userID, setUserID]);
 
   return (
     <div>
-      {" "}
       {loading ? (
         <div className="w-[70%] sm:w-[80%] mt-[17%] mx-auto flex justify-center items-center">
           <ClipLoader color="#4A90E2" size={100} />
         </div>
       ) : (
-        <div className="font-sans">
+        <div className="font-sans ">
           <Header />
+
           <Routes>
+            <Route path="*" element={<NotFoundPage />} />
             <Route path="/" element={<Home />} />
+
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
             <Route path="/about" element={<AboutPage />} />
@@ -93,11 +102,43 @@ function App() {
                 )
               }
             />
+
+            <Route
+              path="/admin-dashboard"
+              element={
+                cookies.access_token && userID && userRole === "admin" ? (
+                  <AdminPanel />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+            <Route
+              path="/edit-product/:id"
+              element={
+                cookies.access_token && userID && userRole === "admin" ? (
+                  <EditProduct />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+            <Route
+              path="/add-product"
+              element={
+                cookies.access_token && userID && userRole === "admin" ? (
+                  <AddProduct />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
           </Routes>
+
           <Footer />
-          <Toaster />
         </div>
       )}
+      <Toaster />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import productsRouter from "./routes/products.js";
 import userRouter from "./routes/user.js";
 import couponRouter from "./routes/coupon.js";
 import paymentsRouter from "./routes/payment.js";
+import adminRouter from "./routes/admin.js";
 
 import { connectDb } from "./config/db.js";
 import { aj } from "./lib/arcjet.js";
@@ -60,6 +61,7 @@ app.use(async (req, res, next) => {
 });
 
 app.use("/api/products", productsRouter);
+app.use("/api/products/admin", adminRouter);
 app.use("/api/coupons", couponRouter);
 app.use("/api/payments", paymentsRouter);
 app.use("/api/auth", userRouter);

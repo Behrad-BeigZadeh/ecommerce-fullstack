@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import FlashSalesProduct from "./FlashSalesProduct";
 import { useQuery } from "@tanstack/react-query";
-import { getProducts } from "../../api/api";
+import { getFlashSaleProducts } from "../../api/api";
 import { ClipLoader } from "react-spinners";
 import toast from "react-hot-toast";
 import useSearchStore from "@/stores/searchStore";
@@ -11,16 +11,17 @@ export interface productType {
   imageUrl: string;
   name: string;
   price: number;
-  previousPrice: number;
+  previousPrice?: number | null;
   quantity: number;
-  offPercent: number;
+  offPercent?: number | null;
+  stockQuantity: number;
 }
 
 export default function FlashSales() {
   const { searchQuery } = useSearchStore();
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["products"],
-    queryFn: () => getProducts(),
+    queryKey: ["flash-sales"],
+    queryFn: () => getFlashSaleProducts(),
   });
 
   const filteredData = useMemo(() => {
@@ -67,7 +68,7 @@ export default function FlashSales() {
 
     return (
       <div className="text-center mt-5">
-        <p>No products match your search.</p>
+        <p>No products match your search in flash sales.</p>
       </div>
     );
   }, [filteredData, isLoading, isError, error]);

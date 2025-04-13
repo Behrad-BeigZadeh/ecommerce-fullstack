@@ -4,6 +4,7 @@ import express from "express";
 import { stripe } from "../lib/stripe.js";
 import Order from "../models/order.js";
 import { UserModel } from "../models/users.js";
+import { productModel } from "../models/products.js";
 
 const router = express.Router();
 
@@ -75,9 +76,6 @@ router.post("/create-checkout-session", verifyToken, async (req, res) => {
       },
     });
 
-    if (totalAmount >= 20000) {
-      await createNewCoupon(userID);
-    }
     res.status(200).json({ id: session.id, totalAmount: totalAmount / 100 });
   } catch (error) {
     console.error("Error processing checkout:", error);
@@ -127,8 +125,21 @@ router.post("/checkout-success", verifyToken, async (req, res) => {
         totalAmount: session.amount_total / 100, // convert from cents to dollars
         stripeSessionId: sessionId,
       });
+      if (session.payment_status === "paid" && session.amount_total >= 20000) {
+        await createNewCoupon(session.metadata.userId);
+      }
 
       await newOrder.save();
+
+      // update product quantity
+      for (const product of products) {
+        const productInDb = await productModel.findById(product.id);
+        if (productInDb) {
+          productInDb.stockQuantity -= product.quantity; // directly reduce stockQuantity
+
+          await productInDb.save();
+        }
+      }
 
       // Add cart items to purchasedItems
       const purchasedItems = user.cartItems.map((item) => item.id);
