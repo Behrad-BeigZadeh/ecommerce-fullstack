@@ -94,7 +94,7 @@ export default function FlashSalesProduct(props: Props) {
             <FaStar />
             <FaStar />
           </div>
-        </div>{" "}
+        </div>
         <div>
           {stockQuantity > 0 ? (
             <p className="text-zinc-500 font-medium text-sm my-2">

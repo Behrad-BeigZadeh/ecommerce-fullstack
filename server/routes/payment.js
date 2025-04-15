@@ -20,7 +20,7 @@ router.post("/create-checkout-session", verifyToken, async (req, res) => {
     let totalAmount = 0;
 
     const lineItems = products.map((product) => {
-      const amount = Math.round(product.price * 100); // stripe wants u to send in the format of cents
+      const amount = Math.round(product.price * 100);
       totalAmount += amount * product.quantity;
 
       return {
@@ -105,7 +105,6 @@ router.post("/checkout-success", verifyToken, async (req, res) => {
         );
       }
 
-      // Check if the session has already been processed
       const existingOrder = await Order.findOne({ stripeSessionId: sessionId });
       if (existingOrder) {
         return res
@@ -113,7 +112,6 @@ router.post("/checkout-success", verifyToken, async (req, res) => {
           .json({ message: "This session has already been processed" });
       }
 
-      // Create a new order
       const products = JSON.parse(session.metadata.products);
       const newOrder = new Order({
         user: session.metadata.userId,
@@ -159,7 +157,6 @@ router.post("/checkout-success", verifyToken, async (req, res) => {
       });
       console.log("Checkout success, items moved to purchasedItems");
 
-      // Respond with success message
       return res.status(200).json({
         success: true,
         message:
@@ -172,7 +169,6 @@ router.post("/checkout-success", verifyToken, async (req, res) => {
     }
   } catch (error) {
     if (error.code === 11000) {
-      // Duplicate sessionId error
       return res.status(400).json({ message: "Checkout already processed" });
     }
 

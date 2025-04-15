@@ -28,7 +28,6 @@ const CartItemPage = () => {
   const [cookies] = useCookies(["access_token"]);
   const queryClient = useQueryClient();
 
-  // Mutation for updating cart quantity
   const updateCartMutation = useMutation({
     mutationFn: ({ productID, quantity }: updateCartParams) =>
       updateCartItemAPI({
@@ -38,7 +37,6 @@ const CartItemPage = () => {
         userID,
       }),
     onMutate: async ({ productID, quantity }) => {
-      // Optimistically update cart quantity
       updateCartQuantity(productID, quantity);
 
       const previousCart = queryClient.getQueryData<productType[]>([
@@ -58,7 +56,6 @@ const CartItemPage = () => {
             : []
       );
 
-      // Return the previous cart state for rolling back in case of error
       return { previousCart };
     },
     onError: (err: AxiosError<ErrorResponse>, _, context) => {
@@ -70,7 +67,7 @@ const CartItemPage = () => {
         );
       }
       toast.error("Failed to update cart!", { id: "add_product" });
-      // Rollback to previous cart state if the mutation fails
+
       queryClient.setQueryData(["cartItems", userID], context?.previousCart);
     },
     onSettled: () => {
@@ -92,23 +89,19 @@ const CartItemPage = () => {
       }),
 
     onMutate: async (productID) => {
-      // Optimistically remove the item from Zustand store
       removeCartItem(productID);
 
-      // Get the previous cart state
       const previousCart = queryClient.getQueryData<productType[]>([
         "cartItems",
         userID,
       ]);
 
-      // Update cache optimistically
       queryClient.setQueryData(
         ["cartItems", userID],
         (oldCart: productType[] | undefined) =>
           oldCart ? oldCart.filter((item) => item._id !== productID) : []
       );
 
-      // Return previous cart state in case of rollback
       return { previousCart };
     },
 
@@ -121,7 +114,7 @@ const CartItemPage = () => {
         );
       }
       toast.error("Failed to remove item from cart!");
-      // Rollback to previous cart state if mutation fails
+
       queryClient.setQueryData(["cartItems", userID], context?.previousCart);
     },
 
@@ -131,7 +124,6 @@ const CartItemPage = () => {
     },
   });
 
-  // Function to trigger removal
   const deleteCartItem = (productID: string) => {
     removeCartMutation.mutate(productID);
   };

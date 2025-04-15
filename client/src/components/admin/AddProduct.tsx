@@ -9,7 +9,7 @@ import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { addProduct } from "@/api/adminApi";
 
-// Use string values for inputs, we'll convert to number later
+
 export type NewProductFormType = Omit<
   productType,
   | "_id"

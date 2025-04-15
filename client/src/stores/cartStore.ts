@@ -3,7 +3,6 @@ import toast from "react-hot-toast";
 import { create, StateCreator } from "zustand";
 import { persist, PersistOptions } from "zustand/middleware";
 
-// Define CartStore type
 interface CartStore {
   cartItems: productType[] | [];
   userID: string;
@@ -29,13 +28,12 @@ export type CouponType = {
   isActive: boolean;
   userID: string;
 };
-// Define Persist Options
+
 type CartPersist = (
   config: StateCreator<CartStore>,
   options: PersistOptions<CartStore>
 ) => StateCreator<CartStore>;
 
-// Create Zustand store with persistence
 export const useCartStore = create<CartStore>(
   (persist as CartPersist)(
     (set, get) => ({

@@ -1,22 +1,6 @@
-// Contact.tsx
-import { useState } from "react";
 import { FaEnvelope, FaPhoneAlt } from "react-icons/fa";
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // You can connect this to an API or EmailJS
-    console.log(form);
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center  py-10 px-6">
       <div className="w-full max-w-4xl grid md:grid-cols-2 gap-10 bg-zinc-100 p-10 rounded-2xl shadow-lg">
@@ -40,13 +24,11 @@ export default function ContactPage() {
         </div>
 
         {/* Form Section */}
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4">
           <input
             type="text"
             name="name"
             placeholder="Your Name"
-            value={form.name}
-            onChange={handleChange}
             required
             className="p-3 border border-zinc-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"
           />
@@ -54,16 +36,12 @@ export default function ContactPage() {
             type="email"
             name="email"
             placeholder="Your Email"
-            value={form.email}
-            onChange={handleChange}
             required
             className="p-3 border border-zinc-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"
           />
           <textarea
             name="message"
             placeholder="Your Message"
-            value={form.message}
-            onChange={handleChange}
             required
             rows={4}
             className="p-3 border border-zinc-300 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-red-500"

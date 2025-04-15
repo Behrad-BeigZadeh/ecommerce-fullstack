@@ -29,8 +29,8 @@ router.post("/add-product", verifyToken, isAdmin, async (req, res) => {
       name,
       price,
       stockQuantity: stockQuantity || 0,
-      previousPrice: previousPrice !== null ? previousPrice : null, // Handle null case
-      offPercent: offPercent !== null ? offPercent : null, // Handle null case
+      previousPrice: previousPrice !== null ? previousPrice : null,
+      offPercent: offPercent !== null ? offPercent : null,
       imageUrl,
     });
 
