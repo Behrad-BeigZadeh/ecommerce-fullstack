@@ -3,7 +3,6 @@ import toast from "react-hot-toast";
 import { ErrorMessageType } from "./api";
 
 import { EditProductFormType } from "@/components/admin/EditProduct";
-import { NewProductFormType } from "@/components/admin/AddProduct";
 import { productType } from "@/components/products/FlashSales";
 
 export const getAllProducts = async (access_token: string, userID: string) => {
