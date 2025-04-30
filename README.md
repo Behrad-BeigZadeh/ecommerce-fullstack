@@ -1,15 +1,8 @@
 # 🛍️ Ecommerce Fullstack App
 
-A full-stack e-commerce application built with **React**, **Node.js**, **Express**, **MongoDB**, **Stripe**, **Zustand**, and **React Query**. It features product browsing, shopping cart, checkout, authentication, and an admin panel for product management.
+A full-featured e-commerce application built with **React**, **Node.js**, **Express**, **MongoDB**, **Stripe**, **Zustand**, and **React Query**.
 
----
-
-## 📸 Screenshots
-
-
-| Home Page | Product Detail | Admin Panel |
-|-----------|----------------|-------------|
-| ![](./screenshots/home.png) | ![](./screenshots/product.png) | ![](./screenshots/admin.png) |
+Users can browse products, add to cart, check out securely via Stripe, and manage orders. Admins can create, update, and delete products with image uploads.
 
 ---
 
@@ -18,49 +11,60 @@ A full-stack e-commerce application built with **React**, **Node.js**, **Express
 ### Frontend
 - React
 - React Router
-- Zustand
-- React Query
-- TailwindCSS
+- Zustand (State Management)
+- React Query (API Caching)
+- TailwindCSS (UI Styling)
 - Stripe Checkout
 - Axios
 
 ### Backend
 - Node.js
 - Express.js
-- MongoDB (Mongoose)
-- JWT Auth
+- MongoDB (via Mongoose)
+- JWT Authentication
 - Stripe API
-- Cloudinary (for image upload)
+
+
+---
+
+## 📸 Screenshots
+
+| Home Page | Product Detail | Admin Panel |
+|-----------|----------------|-------------|
+| ![](./screenshots/Home1.jpg) | ![](./screenshots/Home2.jpg) | ![](./screenshots/Admin.png) | ![](./screenshots/Login.png)
+
+> 💡 You can replace these screenshots with your actual app views (place them inside the `screenshots/` folder).
 
 ---
 
 ## 🚀 Features
 
-- ✅ Browse and filter products
-- 🛒 Add to Cart / Remove from Cart
-- 🔐 User Authentication (JWT-based)
-- 💳 Stripe Checkout Integration
-- 🧑‍💼 Admin Panel for CRUD operations
-- 🖼️ Image Upload (via Cloudinary)
-- 📦 Stock quantity management
-- ⚡ Optimistic UI with React Query
+- 🔍 Browse and filter products
+- 🛒 Add to cart and checkout
+- 👤 JWT-based authentication
+- 💳 Stripe payment integration
+- 🧑‍💼 Admin panel for managing products
+- 🖼️ Image uploads via Cloudinary
+- 🧾 Order and stock tracking
+- ⚡ Optimistic UI updates with React Query
 
 ---
 
-## ⚙️ Getting Started
+---
 
-### 1️⃣ Clone the Repo
+## 🚀 Getting Started
 
-```bash
+### 1️⃣ Clone the Repository
+
 git clone https://github.com/Behrad-BeigZadeh/ecommerce-fullstack.git
-cd ecommerce-fullstack 
+cd ecommerce-fullstack
 
+🔙 Backend Setup
 
+in root
+npm install
 
-## 🔙 Backend Setup
-   cd backend
-   npm install
-Create a .env file inside the backend directory:
+Create a .env file in the backend directory:
 PORT=5000
 MONGO_URI=your_mongo_connection_string
 JWT_SECRET=your_jwt_secret
@@ -69,26 +73,31 @@ CLOUDINARY_CLOUD_NAME=your_cloudinary_name
 CLOUDINARY_API_KEY=your_cloudinary_key
 CLOUDINARY_API_SECRET=your_cloudinary_secret
 
-   npm run dev
+npm run dev
 
-## 🖥️ Frontend Setup
-  cd frontend
-  npm install
-Create a .env file inside the frontend directory:
+---
+
+🖥️ Frontend Setup
+
+cd client
+npm install
+
+Create a .env file in the frontend directory:
 VITE_API_BASE_URL=http://localhost:5000/api
 VITE_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
 VITE_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
 VITE_CLOUDINARY_CLOUD_NAME=your_cloudinary_name
 
-  npm run dev
+npm run dev
 
 
 🧪 Stripe Test Card
-To test payments, use the following test card:
-
+To test Stripe payments, use the test card below:
 Card Number: 4242 4242 4242 4242  
-Exp: Any future date  
+Exp Date: Any future date  
 CVC: Any 3 digits  
+ZIP: Any 5 digits  
+
 
 
 
