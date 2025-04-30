@@ -48,7 +48,6 @@ Users can browse products, add to cart, check out securely via Stripe, and manag
 - 👤 JWT-based authentication
 - 💳 Stripe payment integration
 - 🧑‍💼 Admin panel for managing products
-- 🖼️ Image uploads via Cloudinary
 - 🧾 Order and stock tracking
 - ⚡ Optimistic UI updates with React Query
 
