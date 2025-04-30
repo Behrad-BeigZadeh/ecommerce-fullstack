@@ -34,10 +34,10 @@ Users can browse products, add to cart, check out securely via Stripe, and manag
 ![Home 2](./client/screenshots/Home2.jpg)
 
 ### 🛠️ Admin Page  
-![Admin](./client/screenshots/Admin.png)
+![Admin](./client/screenshots/Admin.jpg)
 
 ### 🔐 Login Page  
-![Login](./client/screenshots/Login.png)
+![Login](./client/screenshots/Login.jpg)
 
 ---
 
