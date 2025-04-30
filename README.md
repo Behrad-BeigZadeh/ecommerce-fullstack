@@ -29,18 +29,15 @@ Users can browse products, add to cart, check out securely via Stripe, and manag
 
 ## 📸 Screenshots
 
-Home Page 
+### 🏠 Home Page  
+![Home 1](./client/screenshots/Home1.jpg)  
+![Home 2](./client/screenshots/Home2.jpg)
 
-(./client/screenshots/Home1.jpg) (./client/screenshots/Home2.jpg) 
-Admin Page
+### 🛠️ Admin Page  
+![Admin](./client/screenshots/Admin.png)
 
-(./client/screenshots/Admin.png) 
-
-Login Page
-
-(./client/screenshots/Login.png)
-
-> 💡 You can replace these screenshots with your actual app views (place them inside the `screenshots/` folder).
+### 🔐 Login Page  
+![Login](./client/screenshots/Login.png)
 
 ---
 
