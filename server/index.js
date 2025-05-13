@@ -66,7 +66,13 @@ app.use("/api/coupons", couponRouter);
 app.use("/api/payments", paymentsRouter);
 app.use("/api/auth", userRouter);
 
-app.listen(PORT, () => {
-  connectDb();
-  console.log(`server is running on PORT ${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server is starting...`);
+  connectDb()
+    .then(() => {
+      console.log(`Server is running on PORT ${PORT}`);
+    })
+    .catch((err) => {
+      console.log("DB Connection Error:", err);
+    });
 });
