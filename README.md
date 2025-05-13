@@ -62,34 +62,40 @@ Users can browse products, add to cart, check out securely via Stripe, and manag
 git clone https://github.com/Behrad-BeigZadeh/ecommerce-fullstack.git
 cd ecommerce-fullstack
 
-🔙 Backend Setup
+### 🧰 Backend
 
-in root
-npm install
+1. Go to the Root folder
+2. Install dependencies:
+   ```bash
+   npm install
 
-Create a .env file in the backend directory:
-PORT=5000
-MONGO_URI=your_mongo_connection_string
-JWT_SECRET=your_jwt_secret
-STRIPE_SECRET=your_stripe_secret_key
-CLOUDINARY_CLOUD_NAME=your_cloudinary_name
-CLOUDINARY_API_KEY=your_cloudinary_key
-CLOUDINARY_API_SECRET=your_cloudinary_secret
+### Set up environment variables  
+-PORT=5000
+-CLIENT_URL=http://localhost:5173
+-MY_EMAIL=for_resetting_password
+-APP_PASSWORD=for_resetting_password
+-MONGO_URI=your_mongo_connection_string
+-JWT_SECRET=your_jwt_secret
+-STRIPE_SECRET_KEY=your_stripe_secret_key
+-ARCJET_KEY=Your_Key
+-ARCJET_ENV=development | production
 
 npm run dev
 
 ---
 
-🖥️ Frontend Setup
 
-cd client
-npm install
+  ### 🧰 Frontend
 
-Create a .env file in the frontend directory:
-VITE_API_BASE_URL=http://localhost:5000/api
-VITE_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
-VITE_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
-VITE_CLOUDINARY_CLOUD_NAME=your_cloudinary_name
+1. Go to the `ckient/` folder
+2. Install dependencies:
+   ```bash
+   npm install
+
+
+### Set up environment variables
+-VITE_API_BASE_URL=http://localhost:5000
+-VITE_STRIPE_PUBLISHABLE_KEY=Your_key
 
 npm run dev
 
