@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { productType } from "../products/FlashSales";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ErrorResponse } from "../products/FlashSalesProduct";
@@ -8,7 +8,6 @@ import useCartStore from "@/stores/cartStore";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { addProduct } from "@/api/adminApi";
-
 
 export type NewProductFormType = Omit<
   productType,
