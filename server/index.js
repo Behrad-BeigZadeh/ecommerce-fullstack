@@ -23,6 +23,7 @@ app.use(
     credentials: true,
   })
 );
+app.use("/api", pingRoute);
 app.use(helmet());
 app.use(morgan("dev"));
 
@@ -65,7 +66,6 @@ app.use("/api/products/admin", adminRouter);
 app.use("/api/coupons", couponRouter);
 app.use("/api/payments", paymentsRouter);
 app.use("/api/auth", userRouter);
-app.use("/api", pingRoute);
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server is starting...`);
