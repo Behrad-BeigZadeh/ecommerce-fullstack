@@ -75,7 +75,7 @@ export default function Login() {
     >
       <div>
         <img
-          src="../images/dl.beatsnoop 1.png"
+          src="/images/dl.beatsnoop 1.png"
           alt="image"
           className="w-[80%] mt-[5%] h-full lg:h-[90%] hidden md:inline"
         />

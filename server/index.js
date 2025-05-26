@@ -6,7 +6,7 @@ import userRouter from "./routes/user.js";
 import couponRouter from "./routes/coupon.js";
 import paymentsRouter from "./routes/payment.js";
 import adminRouter from "./routes/admin.js";
-
+import pingRoute from "./routes/ping";
 import { connectDb } from "./config/db.js";
 import { aj } from "./lib/arcjet.js";
 import morgan from "morgan";
@@ -65,6 +65,7 @@ app.use("/api/products/admin", adminRouter);
 app.use("/api/coupons", couponRouter);
 app.use("/api/payments", paymentsRouter);
 app.use("/api/auth", userRouter);
+app.use("/api", pingRoute);
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server is starting...`);
