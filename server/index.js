@@ -6,7 +6,6 @@ import userRouter from "./routes/user.js";
 import couponRouter from "./routes/coupon.js";
 import paymentsRouter from "./routes/payment.js";
 import adminRouter from "./routes/admin.js";
-import pingRoute from "./routes/ping.js";
 import { connectDb } from "./config/db.js";
 import { aj } from "./lib/arcjet.js";
 import morgan from "morgan";
@@ -23,7 +22,9 @@ app.use(
     credentials: true,
   })
 );
-app.use("/api", pingRoute);
+app.get("/ping", (req, res) => {
+  res.status(200).send("pong");
+});
 app.use(helmet());
 app.use(morgan("dev"));
 
