@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 const data = [
   {
-    src: "https://etedge-insights.com/wp-content/uploads/2020/11/ET-Banner.jpg",
+    src: "https://res.cloudinary.com/dc0quhvpm/image/upload/v1748286124/sunnie-composite_ubpwcz.jpg",
   },
   {
-    src: "https://i.ytimg.com/vi/NqPeeO-7yT4/maxresdefault.jpg",
+    src: "https://res.cloudinary.com/dc0quhvpm/image/upload/v1748286017/maxresdefault_xcpw3q.jpg",
   },
   {
-    src: "https://the-fragrance-shop.imgix.net/Promos/2019/happy-week/TFS-800x500-dior-sauvage-2019-subbrand.jpg",
+    src: "https://res.cloudinary.com/dc0quhvpm/image/upload/v1748286221/s-l1200_j0iilq.jpg",
   },
 ];
 
