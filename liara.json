@@ -1,6 +1,0 @@
-{
-  "platform": "node",
-  "app": "ecommerce-api",
-  "port": 5000,
-  "startCommand": "node server/index.js"
-}
