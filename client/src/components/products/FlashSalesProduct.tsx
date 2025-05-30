@@ -63,13 +63,16 @@ export default function FlashSalesProduct(props: Props) {
 
   return (
     <div className="w-200  flex flex-col justify-center  max-w-[80%]   mx-auto">
-      <div className="bg-white shadow-md rounded-lg  flex flex-col justify-center items-center rounded-t-xl p-5 ">
-        <p className="bg-red-500  mr-[90%] -mt-[5%] font-semibold rounded-md p-1 text-zinc-300">
+      <div className="relative bg-white shadow-md rounded-t-xl flex justify-center items-center aspect-[4/3] overflow-hidden">
+        <p className="absolute top-2 left-2 bg-red-500 text-white text-xs sm:text-sm font-semibold rounded px-2 py-1 z-10">
           -{offPercent}%
         </p>
-        <img className="h-30" src={imageUrl} alt="image" />
+        <img
+          src={imageUrl}
+          alt={name}
+          className="w-[70%] h-[70%] object-contain"
+        />
       </div>
-
       {stockQuantity > 0 && (
         <button
           onClick={handleAddToCart}

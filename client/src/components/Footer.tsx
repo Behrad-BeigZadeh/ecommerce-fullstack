@@ -12,13 +12,13 @@ export default function Footer() {
             <p className="mb-6 text-[10px] sm:text-sm">
               Get 10% off your first order
             </p>
-            <div className="relative flex items-center">
+            <div className="relative w-fit">
               <input
                 placeholder="Enter your email"
                 type="text"
-                className=" text-[12px]  bg-zinc-950 border-1 w-37 sm:w-40 border-zinc-300 flex sm:py-1  text-zinc-400 px-1"
+                className="text-[12px] bg-zinc-950 border border-zinc-300 text-zinc-400 px-2 pr-6 py-1 sm:w-40 w-36 rounded"
               />
-              <button className="absolute sm:text-xl ml-33">
+              <button className="absolute right-1 top-1/2 -translate-y-1/2 text-zinc-400 sm:text-lg text-base">
                 <AiOutlineSend />
               </button>
             </div>

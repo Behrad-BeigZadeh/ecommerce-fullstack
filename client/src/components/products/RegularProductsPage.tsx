@@ -54,9 +54,13 @@ export default function RegularProductsPage(props: Props) {
   };
 
   return (
-    <div className="w-200  flex flex-col justify-center  max-w-[80%]   mx-auto">
-      <div className="bg-white shadow-md rounded-lg  flex flex-col justify-center items-center rounded-t-xl p-5 ">
-        <img className="h-30" src={imageUrl} alt="image" />
+    <div className="w-200  flex flex-col justify-center  max-w-[80%] mb-10   mx-auto">
+      <div className="relative bg-white shadow-md rounded-t-xl flex justify-center items-center aspect-[4/3] overflow-hidden ">
+        <img
+          className="w-[70%] h-[70%] object-contain"
+          src={imageUrl}
+          alt="image"
+        />
       </div>
 
       {stockQuantity > 0 && (
