@@ -106,7 +106,7 @@ export default function Header() {
         </button>
         <div
           className={`absolute xl:hidden bg-zinc-900 text-zinc-300 top-24 left-0 w-full flex flex-col items-center gap-6 font-semibold text-lg transform transition-transform ${
-            isMenuOpen ? "block z-10" : "hidden"
+            isMenuOpen ? "block z-20" : "hidden"
           }`}
         >
           <div className="w-[80%] mt-5">
