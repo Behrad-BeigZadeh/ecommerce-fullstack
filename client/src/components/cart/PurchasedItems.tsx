@@ -74,7 +74,7 @@ const PurchasedItems = () => {
                 <img
                   src={item.imageUrl}
                   alt={item.name}
-                  className="h-30  rounded-md"
+                  className="h-28 object-contain"
                 />
               </div>
 

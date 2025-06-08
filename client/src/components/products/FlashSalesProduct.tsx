@@ -17,7 +17,7 @@ export interface ErrorResponse {
 }
 
 export default function FlashSalesProduct(props: Props) {
-  const { addToCart, userID } = useCartStore();
+  const { addToCart, userID, calculateTotals } = useCartStore();
   const [cookies] = useCookies(["access_token"]);
   const { offPercent, imageUrl, price, name, previousPrice, stockQuantity } =
     props.product;
@@ -34,6 +34,7 @@ export default function FlashSalesProduct(props: Props) {
     onSuccess: () => {
       addToCart(product);
       toast.success("Product added to cart");
+      calculateTotals();
       queryClient.invalidateQueries({ queryKey: ["cartItems", userID] });
     },
     onError: (error: AxiosError<ErrorResponse>) => {

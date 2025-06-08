@@ -3,7 +3,7 @@ import QRCode from "react-qr-code";
 
 export default function Footer() {
   return (
-    <footer className=" bg-zinc-950 text-zinc-300 mt-15 w-fit min-w-full ">
+    <footer className=" bg-zinc-950 text-zinc-300 mt-20 w-fit min-w-full ">
       <div className="mx-auto py-14 px-6 container">
         <div className="grid md:grid-cols-12 grid-cols-1 gap-7">
           <div className="lg:col-span-2 md:col-span-4 col-span-12">

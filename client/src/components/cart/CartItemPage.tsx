@@ -147,7 +147,7 @@ const CartItemPage = () => {
             <div className="hidden sm:grid grid-cols-5 grid-rows-1 border border-slate-100 font-semibold p-3 shadow-md text-[12px] lg:text-base">
               <div className="flex items-center gap-2">
                 <img
-                  className="lg:w-20 lg:h-15 w-12 h-7"
+                  className="lg:w-23 lg:h-18 w-12 h-7 object-contain"
                   src={cartItem.imageUrl}
                   alt="image"
                 />

@@ -10,7 +10,7 @@ import { addToCartAPI } from "../../api/api";
 import { ErrorResponse, Props } from "./FlashSalesProduct";
 
 export default function RegularProductsPage(props: Props) {
-  const { addToCart, userID } = useCartStore();
+  const { addToCart, userID, calculateTotals } = useCartStore();
   const [cookies] = useCookies(["access_token"]);
   const { imageUrl, price, name, stockQuantity } = props.product;
   const navigate = useNavigate();
@@ -26,6 +26,7 @@ export default function RegularProductsPage(props: Props) {
     onSuccess: () => {
       addToCart(product);
       toast.success("Product added to cart");
+      calculateTotals();
       queryClient.invalidateQueries({ queryKey: ["cartItems", userID] });
     },
     onError: (error: AxiosError<ErrorResponse>) => {
