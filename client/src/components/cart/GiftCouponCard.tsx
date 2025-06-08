@@ -19,7 +19,6 @@ const GiftCouponCard = () => {
     coupon,
     removeCoupon,
   } = useCartStore();
-  console.log(isCouponApplied);
 
   const { data, isError, error } = useQuery({
     queryKey: ["coupon", userID],

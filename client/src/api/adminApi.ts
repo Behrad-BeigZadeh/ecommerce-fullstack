@@ -93,7 +93,6 @@ export const addProduct = async (
   userID: string,
   newProduct: Omit<productType, "_id" | "quantity">
 ) => {
-  console.log(newProduct);
   try {
     await axios.post(
       `${import.meta.env.VITE_BASE_URL}/api/products/admin/add-product`,

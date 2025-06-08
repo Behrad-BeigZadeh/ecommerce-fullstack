@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 const stripePromise = loadStripe(
   String(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
 );
-console.log(stripePromise);
+
 const Order = () => {
   const { total, subtotal, coupon, isCouponApplied, cartItems } =
     useCartStore();
@@ -37,16 +37,11 @@ const Order = () => {
       );
 
       const session = res.data;
-      const result = await stripe?.redirectToCheckout({
+      await stripe?.redirectToCheckout({
         sessionId: session.id,
       });
-
-      if (result?.error) {
-        console.error("Error:", result.error);
-      }
-    } catch (error) {
+    } catch {
       toast.error("Error finalizing order");
-      console.log("Error finalizing order", error);
     }
   };
 

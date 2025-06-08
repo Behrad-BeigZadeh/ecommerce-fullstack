@@ -10,14 +10,12 @@ router.get("/", verifyToken, isAdmin, async (req, res) => {
 
     res.status(200).json(products);
   } catch (error) {
-    console.log("error in fetching products route", error);
     res.status(500).json({ error: error.message });
   }
 });
 
 router.post("/add-product", verifyToken, isAdmin, async (req, res) => {
   try {
-    console.log(req.body);
     const { name, price, stockQuantity, previousPrice, offPercent, imageUrl } =
       req.body.product;
 
@@ -37,19 +35,16 @@ router.post("/add-product", verifyToken, isAdmin, async (req, res) => {
     await newProduct.save();
     res.status(200).json({ message: "Product added successfully" });
   } catch (error) {
-    console.log("error adding product", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 
 router.get("/:id", verifyToken, isAdmin, async (req, res) => {
   try {
-    console.log(req);
     const { id } = req.params;
     const product = await productModel.findById(id);
     res.status(200).json(product);
   } catch (error) {
-    console.log("error getting product", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -79,7 +74,6 @@ router.post("/:id", verifyToken, isAdmin, async (req, res) => {
 
     res.status(200).json({ message: "Product updated successfully" });
   } catch (error) {
-    console.log("error updating product", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -90,7 +84,6 @@ router.delete("/:id", verifyToken, isAdmin, async (req, res) => {
     await productModel.findByIdAndDelete(id);
     res.status(201).json({ message: "Product deleted successfully" });
   } catch (error) {
-    console.log("error deleting product", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });

@@ -123,7 +123,8 @@ router.post(
 
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
-          console.log(error);
+          logger.error(`Email sending failed: ${error.message}`);
+          return res.status(500).json({ message: "Failed to send email" });
         } else {
           res.send({ Status: "Success" });
         }
@@ -190,7 +191,6 @@ export const verifyToken = async (req, res, next) => {
       throw error;
     }
   } catch (error) {
-    console.log("Error in verifyToken middleware", error.message);
     return res
       .status(401)
       .json({ message: "Unauthorized - Invalid access token" });
@@ -207,7 +207,6 @@ export const isAdmin = async (req, res, next) => {
     }
     next();
   } catch (error) {
-    console.log("error in admin middleware", error);
     return res.status(403).json({ message: "Access denied - Admin only" });
   }
 };

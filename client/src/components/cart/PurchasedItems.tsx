@@ -29,7 +29,6 @@ const PurchasedItems = () => {
 
   if (isError) {
     toast.error(error.message || "Failed to get purchased items");
-    console.log("Error in purchased items", error);
   }
 
   const queryClient = useQueryClient();

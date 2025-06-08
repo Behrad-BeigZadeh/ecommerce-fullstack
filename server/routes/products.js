@@ -15,7 +15,6 @@ router.get("/flash-sales", async (req, res) => {
 
     res.status(200).json(products);
   } catch (error) {
-    console.log("Error in fetching flash sale products route:", error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -31,10 +30,9 @@ router.get("/", async (req, res) => {
         { previousPrice: null },
       ],
     });
-    console.log(products);
+
     res.status(200).json(products);
   } catch (error) {
-    console.log("Error in fetching flash sale products route:", error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -52,7 +50,6 @@ router.delete("/clear-cart", async (req, res) => {
     await user.save();
     res.status(201).json({ message: "Cart Cleared Successfully" });
   } catch (error) {
-    console.log("Error in clearCart route", error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -76,7 +73,6 @@ router.post("/add-to-cart", verifyToken, async (req, res) => {
     await user.save();
     res.json(user.cartItems);
   } catch (error) {
-    console.log("Error in addToCart route", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -129,7 +125,6 @@ router.get("/cart-items", verifyToken, async (req, res) => {
 
     res.json(cartItems);
   } catch (error) {
-    console.log("Error in getCartProducts route", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -153,7 +148,6 @@ router.post("/update-cart/:id", verifyToken, async (req, res) => {
       res.status(404).json({ message: "Product not found" });
     }
   } catch (error) {
-    console.log("Error in updateProduct route", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -176,7 +170,6 @@ router.delete("/:id", verifyToken, async (req, res) => {
     await user.save();
     res.status(201).json({ message: "Product Deleted Successfully" });
   } catch (error) {
-    console.log("Error in updateProduct route", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });

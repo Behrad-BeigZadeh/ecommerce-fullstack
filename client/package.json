@@ -33,6 +33,7 @@
     "shadcn": "^2.4.0-canary.11",
     "slick-carousel": "^1.8.1",
     "stripe": "^17.7.0",
+    "winston": "^3.17.0",
     "zustand": "^5.0.3"
   },
   "devDependencies": {

@@ -27,9 +27,8 @@ import AddProduct from "./components/admin/AddProduct";
 function App() {
   const { userID, setUserID } = useCartStore();
   const [cookies] = useCookies(["access_token"]);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
   const { userRole } = useAdminStore();
-  console.log(userRole);
 
   useEffect(() => {
     if (!userID) {

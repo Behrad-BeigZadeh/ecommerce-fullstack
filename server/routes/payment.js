@@ -155,7 +155,6 @@ router.post("/checkout-success", verifyToken, async (req, res) => {
           error: error.message,
         });
       });
-      console.log("Checkout success, items moved to purchasedItems");
 
       return res.status(200).json({
         success: true,

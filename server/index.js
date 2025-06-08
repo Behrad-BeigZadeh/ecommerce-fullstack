@@ -57,7 +57,6 @@ app.use(async (req, res, next) => {
 
     next();
   } catch (error) {
-    console.log("Arcjet error", error);
     next(error);
   }
 });
@@ -69,12 +68,12 @@ app.use("/api/payments", paymentsRouter);
 app.use("/api/auth", userRouter);
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server is starting...`);
+  logger.info(`Server is starting...`);
   connectDb()
     .then(() => {
-      console.log(`Server is running on PORT ${PORT}`);
+      logger.info(`Server is running on PORT ${PORT}`);
     })
     .catch((err) => {
-      console.log("DB Connection Error:", err);
+      logger.error(`DB Connection Error: ${err.message}`);
     });
 });

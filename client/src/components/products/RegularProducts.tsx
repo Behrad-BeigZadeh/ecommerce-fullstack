@@ -14,7 +14,7 @@ export default function RegularProducts() {
     queryKey: ["regular-products"],
     queryFn: () => getRegularProducts(),
   });
-  console.log(data);
+
   const filteredData = useMemo(() => {
     if (!data) return [];
     return data.filter((item: productType) =>
