@@ -10,6 +10,7 @@ import { connectDb } from "./config/db.js";
 import { aj } from "./lib/arcjet.js";
 import morgan from "morgan";
 import helmet from "helmet";
+import logger from "./lib/logger.js";
 
 const app = express();
 dotenv.config();
