@@ -24,7 +24,6 @@ export default function FlashSalesProduct(props: Props) {
   const navigate = useNavigate();
   const product = props.product;
   const queryClient = useQueryClient();
-
   const mutation = useMutation<
     productType,
     AxiosError<ErrorResponse>,

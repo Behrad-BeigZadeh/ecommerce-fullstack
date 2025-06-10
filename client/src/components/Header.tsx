@@ -8,6 +8,7 @@ import { useCookies } from "react-cookie";
 import useSearchStore from "@/stores/searchStore";
 import { FaCircleUser } from "react-icons/fa6";
 import { useAdminStore } from "@/stores/adminStore";
+import toast from "react-hot-toast";
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { cartItems, userID, setUserID } = useCartStore();
@@ -15,7 +16,7 @@ export default function Header() {
   const { searchQuery, setSearchQuery } = useSearchStore();
   const { userRole } = useAdminStore();
   const logout = async () => {
-    window.localStorage.removeItem("userID");
+    toast.success("Logged out successfully");
     setUserID("");
     removeCookie("access_token");
   };

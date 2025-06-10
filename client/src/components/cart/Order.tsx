@@ -16,7 +16,7 @@ const Order = () => {
   const formattedSubtotal = subtotal.toFixed(2);
   const formattedTotal = total.toFixed(2);
   const formattedSavings = savings.toFixed(2);
-  const userID = window.localStorage.getItem("userID");
+  const { userID } = useCartStore();
   const [cookies] = useCookies(["access_token"]);
 
   const handlePayment = async () => {

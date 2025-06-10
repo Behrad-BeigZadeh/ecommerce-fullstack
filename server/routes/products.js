@@ -57,7 +57,12 @@ router.delete("/clear-cart", async (req, res) => {
 router.post("/add-to-cart", verifyToken, async (req, res) => {
   try {
     const { productID } = req.body;
-    const userID = req.headers.userid;
+    const userID = req.headers["userid"];
+
+    if (!userID || typeof userID !== "string") {
+      return res.status(400).json({ message: "Missing or invalid userID" });
+    }
+
     const user = await UserModel.findById(userID);
     if (!user) {
       return res.status(404).json({ message: "User not found" });

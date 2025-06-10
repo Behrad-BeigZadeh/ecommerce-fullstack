@@ -45,7 +45,7 @@ export default function RegularProductsPage(props: Props) {
   });
 
   const handleAddToCart = () => {
-    if (!cookies.access_token) {
+    if (!cookies.access_token || userID === "") {
       toast.error("Login to be able to add products to your cart", {
         id: "add_product",
       });
