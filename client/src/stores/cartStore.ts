@@ -12,7 +12,7 @@ interface CartStore {
   isCouponApplied: boolean;
   setCartItems: (items: productType[]) => void;
   setUserID: (newUserID: string) => void;
-  setCoupon: (newValue: CouponType) => void;
+  setCoupon: (newValue: CouponType | null) => void;
   removeCoupon: () => void;
   setIsCouponApplied: (newStatus: boolean) => void;
   addToCart: (product: productType) => void;

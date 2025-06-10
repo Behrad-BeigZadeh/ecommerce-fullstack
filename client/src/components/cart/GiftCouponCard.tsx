@@ -71,6 +71,9 @@ const GiftCouponCard = () => {
     if (data) {
       setCoupon(data);
       calculateTotals();
+    } else if (data === null) {
+      setCoupon(null);
+      calculateTotals();
     }
   }, [data, setCoupon, calculateTotals]);
 
@@ -90,43 +93,42 @@ const GiftCouponCard = () => {
   };
 
   return (
-    <div className="flex flex-col border-2 border-slate-950 p-2">
-      <div className="space-y-4">
-        <div className="flex flex-col justify-center items-center">
-          <label htmlFor="voucher" className="mb-2 block text-sm font-medium ">
-            Do you have a voucher or gift card?
-          </label>
-          <input
-            type="text"
-            id="voucher"
-            className="block  w-[75%] rounded-md border border-slate-950 text-md p-1.5"
-            placeholder="Enter code here"
-            value={userInputCode}
-            onChange={(e) => setUserInputCode(e.target.value)}
-            required
-          />
-        </div>
+    <div className="w-full lg:w-[40%] rounded-2xl border border-slate-300 p-4 shadow-md bg-white">
+      <div className="space-y-4 text-center">
+        <h2 className="text-base font-semibold text-gray-700">
+          Do you have a voucher or gift card?
+        </h2>
+
+        <input
+          type="text"
+          id="voucher"
+          className="w-full rounded-md border border-slate-300 p-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+          placeholder="Enter your code"
+          value={userInputCode}
+          onChange={(e) => setUserInputCode(e.target.value)}
+        />
 
         <button
           type="button"
           disabled={mutation.isPending}
-          className="flex w-full items-center justify-center rounded-lg bg-red-500 px-5 py-2.5 text-sm font-medium text-slate-200 hover:bg-red-700 cursor-pointer"
+          className="w-full rounded-md bg-red-500 px-5 py-2 text-sm font-semibold text-white hover:bg-red-600 disabled:opacity-50"
           onClick={handleApplyCoupon}
         >
           {mutation.isPending ? "Applying..." : "Apply Code"}
         </button>
       </div>
-      {isCouponApplied && coupon && (
-        <div className="mt-4">
-          <h3 className="text-lg font-medium text-gray-900">Applied Coupon</h3>
 
-          <p className="mt-2 text-sm text-red-500">
+      {isCouponApplied && coupon && (
+        <div className="mt-6 space-y-2 text-center">
+          <h3 className="text-base font-medium text-gray-800">
+            Coupon Applied
+          </h3>
+          <p className="text-sm text-green-600">
             {coupon.code} - {coupon.discountPercentage}% off
           </p>
-
           <button
             type="button"
-            className="flex w-full items-center justify-center rounded-lg bg-red-500 px-5 py-2.5 text-sm font-medium text-slate-200 hover:bg-red-700 cursor-pointer"
+            className="w-full rounded-md bg-gray-200 px-5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
             onClick={handleRemoveCoupon}
           >
             Remove Coupon
@@ -134,12 +136,12 @@ const GiftCouponCard = () => {
         </div>
       )}
 
-      {coupon && coupon.isActive && (
-        <div className="mt-4">
-          <h3 className="text-lg font-medium text-gray-900">
-            Your Available Coupon:
+      {coupon && coupon.isActive && !isCouponApplied && (
+        <div className="mt-6 space-y-2 text-center">
+          <h3 className="text-base font-medium text-gray-800">
+            Available Coupon
           </h3>
-          <p className="mt-2 text-sm text-red-500">
+          <p className="text-sm text-blue-600">
             {coupon.code} - {coupon.discountPercentage}% off
           </p>
         </div>

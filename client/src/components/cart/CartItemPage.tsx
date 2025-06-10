@@ -133,8 +133,9 @@ const CartItemPage = () => {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.9, delay: 1 }}
+      className="w-full px-4 sm:px-0"
     >
-      <div className=" hidden sm:grid grid-cols-4 grid-rows-1 mx-auto w-[65%] mr-[25%] text-center mt-10 border border-slate-100 font-bold p-3 shadow-md">
+      <div className=" hidden sm:grid grid-cols-5 grid-rows-1 mx-auto w-[80%]  text-center mt-10 border border-slate-100 font-bold p-3 shadow-md">
         <p className=" flex items-center justify-center">Product</p>
         <p className=" flex items-center justify-center">Price</p>
         <p className=" flex items-center justify-center">Quantity</p>
@@ -143,7 +144,10 @@ const CartItemPage = () => {
 
       {cartItems.map((cartItem) => {
         return (
-          <div className="w-[70%] sm:w-[80%] mt-10 mx-auto" key={cartItem._id}>
+          <div
+            className=" sm:w-[80%] mt-10 mx-auto hover:scale-105 transition duration-400"
+            key={cartItem._id}
+          >
             <div className="hidden sm:grid grid-cols-5 grid-rows-1 border border-slate-100 font-semibold p-3 shadow-md text-[12px] lg:text-base">
               <div className="flex items-center gap-2">
                 <img
@@ -189,44 +193,51 @@ const CartItemPage = () => {
             </div>
 
             {/* Mobile Responsive */}
-            <div className="flex sm:hidden flex-col justify-center font-bold border border-slate-500 rounded-xl">
-              <div className="bg-zinc-200 relative rounded-t-xl py-5 flex justify-center">
+            <div className="w-[85%] mx-auto mt-6 flex sm:hidden flex-col rounded-xl border border-slate-300 shadow-md overflow-hidden bg-white">
+              {/* Image & Delete */}
+              <div className="relative bg-zinc-100 py-4 flex justify-center items-center">
                 <button
                   onClick={() => deleteCartItem(cartItem._id)}
-                  className="absolute mr-[90%] text-red-600 text-3xl hover:text-red-700 cursor-pointer"
+                  className="absolute left-3 top-3 text-red-600 hover:text-red-700"
                 >
-                  <MdDelete />
+                  <MdDelete className="text-3xl" />
                 </button>
                 <img
-                  className="h-20 w-20"
+                  className="h-24 w-24 object-contain"
                   src={cartItem.imageUrl}
-                  alt="image"
+                  alt="product"
                 />
               </div>
 
-              <div>
-                <p className="font-semibold my-1.5 ml-2">{cartItem.name}</p>
-                <div className="flex justify-between items-center mx-2">
-                  <p>{cartItem.price}$</p>
-                  <div className="flex items-center p-3">
+              {/* Details */}
+              <div className="p-4 space-y-3 text-sm text-gray-700">
+                <p className="font-semibold text-base text-gray-900 truncate">
+                  {cartItem.name}
+                </p>
+
+                <div className="flex justify-between items-center">
+                  <p className="text-green-600 font-semibold">
+                    ${cartItem.price}
+                  </p>
+                  <div className="flex items-center gap-3">
                     <button
-                      className="flex h-5 w-5 items-center justify-center rounded-md border border-slate-900 bg-slate-950 hover:bg-slate-700 cursor-pointer m-2"
+                      className="h-6 w-6 flex items-center justify-center rounded-md border border-slate-400 bg-slate-900 hover:bg-slate-700"
                       onClick={() =>
                         cartItem.quantity === 1
                           ? deleteCartItem(cartItem._id)
                           : updateCartItem(cartItem._id, cartItem.quantity - 1)
                       }
                     >
-                      <FaMinus className="text-gray-300" />
+                      <FaMinus className="text-white text-xs" />
                     </button>
-                    <p>{cartItem.quantity}</p>
+                    <p className="font-medium text-sm">{cartItem.quantity}</p>
                     <button
-                      className="flex h-5 w-5 items-center justify-center rounded-md border border-slate-900 bg-slate-950 hover:bg-slate-700 cursor-pointer m-2"
+                      className="h-6 w-6 flex items-center justify-center rounded-md border border-slate-400 bg-slate-900 hover:bg-slate-700"
                       onClick={() =>
                         updateCartItem(cartItem._id, cartItem.quantity + 1)
                       }
                     >
-                      <FaPlus className="text-gray-300" />
+                      <FaPlus className="text-white text-xs" />
                     </button>
                   </div>
                 </div>

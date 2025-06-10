@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 const AdminPanel = () => {
   const { userID } = useCartStore();
   const [cookies] = useCookies(["access_token"]);
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["All-products"],
     queryFn: () => getAllProducts(cookies.access_token, userID),
@@ -19,13 +20,14 @@ const AdminPanel = () => {
   const content = useMemo(() => {
     if (isLoading) {
       return (
-        <div className="w-[70%] sm:w-[80%] mt-10 mx-auto flex justify-center">
+        <div className="w-full flex justify-center mt-10">
           <ClipLoader color="#4A90E2" size={50} />
         </div>
       );
     }
+
     if (isError) {
-      toast.error(error?.message || "Failed to fetch cart items", {
+      toast.error(error?.message || "Failed to fetch products", {
         id: "fetchCart",
       });
       return (
@@ -34,33 +36,37 @@ const AdminPanel = () => {
         </div>
       );
     }
+
     return (
-      <div>
-        <h1 className="hidden ml-[10%] mx-auto mt-10 text-4xl font-bold text-zinc-900 border-b-4 border-red-500 sm:inline-block pb-2">
+      <div className="w-full flex flex-col items-center px-2">
+        <h1 className="hidden sm:inline-block mt-10 text-4xl font-bold text-zinc-900 border-b-4 border-red-500 pb-2">
           Admin Page
         </h1>
-        <div className=" hidden sm:grid grid-cols-5 grid-rows-1 mx-auto w-[80%]  text-center mt-10 border border-slate-100 font-bold p-3 shadow-md">
-          <p className=" flex items-center justify-center">Product</p>
-          <p className=" flex items-center justify-center">Price</p>
-          <p className=" flex items-center justify-center">Stock</p>
-          <p className=" flex items-center justify-center">Off</p>
-          <p className=" flex items-center justify-center">Off Percent</p>
+
+        <div className="hidden sm:grid grid-cols-5 mt-10 w-[80%] text-center border border-slate-100 font-bold p-3 shadow-md">
+          <p className="flex items-center justify-center">Product</p>
+          <p className="flex items-center justify-center">Price</p>
+          <p className="flex items-center justify-center">Stock</p>
+          <p className="flex items-center justify-center">Off</p>
+          <p className="flex items-center justify-center">Off Percent</p>
         </div>
-        {data?.map((item: productType) => (
-          <div key={item._id}>
-            <Products product={item} />
-          </div>
-        ))}
+
+        <div className="w-full flex flex-col items-center">
+          {data?.map((item: productType) => (
+            <Products key={item._id} product={item} />
+          ))}
+        </div>
 
         <a
           href="/add-product"
-          className="bg-red-500 hover:bg-red-600 text-slate-200 flex justify-center items-center p-2 mx-auto mt-10 rounded-md cursor-pointer w-[20%]"
+          className="w-[90%] sm:w-[20%] max-w-[400px] bg-red-500 hover:bg-red-600 text-slate-200 flex justify-center items-center p-2 mt-10 rounded-md cursor-pointer"
         >
           <button>Add Product</button>
         </a>
       </div>
     );
   }, [data, isLoading, isError, error]);
+
   return <>{content}</>;
 };
 

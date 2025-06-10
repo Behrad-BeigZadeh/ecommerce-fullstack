@@ -46,37 +46,52 @@ const Order = () => {
   };
 
   return (
-    <div className="flex flex-col border-2 border-slate-950 p-2 ">
-      <h1 className="font-bold text-xl mb-2">Cart Total</h1>
-      <div className="flex items-center justify-between font-semibold  border-b border-slate-300 py-2">
-        <p>Subtotal</p>
-        <p>${formattedSubtotal}</p>
-      </div>
-      <div className="flex items-center justify-between font-semibold border-b border-slate-300 py-2">
-        <p>Shipping</p>
-        <p>free</p>
-      </div>
-      {coupon && isCouponApplied && savings > 0 && (
-        <div className="flex items-center justify-between font-semibold py-2">
-          <p>Savings</p>
-          <p>-${formattedSavings}</p>
+    <div className="w-full lg:w-[60%] rounded-2xl border border-slate-300 p-5 shadow-md bg-white">
+      <h2 className="text-lg font-semibold text-gray-800 mb-4 text-center">
+        Cart Summary
+      </h2>
+
+      <div className="space-y-3 text-sm text-gray-700">
+        <div className="flex justify-between border-b border-slate-200 pb-2">
+          <span>Subtotal</span>
+          <span>${formattedSubtotal}</span>
         </div>
-      )}
-      {coupon && isCouponApplied && (
-        <div className="flex items-center justify-between font-semibold border-b border-slate-300 py-2">
-          <p>Coupon ({coupon.code})</p>
-          <p>-{coupon.discountPercentage}%</p>
+
+        <div className="flex justify-between border-b border-slate-200 pb-2">
+          <span>Shipping</span>
+          <span className="capitalize">Free</span>
         </div>
-      )}
-      <div className="flex items-center justify-between font-semibold py-2">
-        <p>Total</p>
-        <p>${formattedTotal}</p>
+
+        {coupon && isCouponApplied && savings > 0 && (
+          <div className="flex justify-between text-green-600">
+            <span>Savings</span>
+            <span>-${formattedSavings}</span>
+          </div>
+        )}
+
+        {coupon && isCouponApplied && (
+          <div className="flex justify-between border-b border-slate-200 pb-2">
+            <span className="text-gray-700">
+              Coupon{" "}
+              <span className="font-medium text-gray-900">({coupon.code})</span>
+            </span>
+            <span className="text-red-500 font-semibold">
+              -{coupon.discountPercentage}%
+            </span>
+          </div>
+        )}
+
+        <div className="flex justify-between font-semibold text-base text-gray-900 mt-4">
+          <span>Total</span>
+          <span>${formattedTotal}</span>
+        </div>
       </div>
+
       <button
-        onClick={() => handlePayment()}
-        className="bg-red-500 hover:bg-red-700 cursor-pointer text-slate-200 rounded-sm p-2 font-semibold mt-5 flex justify-center items-center"
+        onClick={handlePayment}
+        className="mt-6 w-full rounded-md bg-red-500 py-2.5 text-sm font-semibold text-white hover:bg-red-600 transition"
       >
-        Proceed To CheckOut
+        Proceed to Checkout
       </button>
     </div>
   );

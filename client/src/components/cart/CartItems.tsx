@@ -49,7 +49,7 @@ const CartItems = () => {
     }
 
     return (
-      <div className="flex flex-col justify-center items-center h-96 space-y-4">
+      <div className="flex flex-col justify-center items-center mx-auto h-96 space-y-4">
         <div className="bg-base-100 rounded-full">
           <LuPackageOpen className="size-20" />
         </div>
