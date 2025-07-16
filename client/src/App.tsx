@@ -1,8 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import { useState } from "react";
 import { Toaster } from "react-hot-toast";
-import { ClipLoader } from "react-spinners";
 import { motion } from "framer-motion";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
