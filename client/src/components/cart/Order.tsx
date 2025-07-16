@@ -4,6 +4,7 @@ import axios from "axios";
 import { useCookies } from "react-cookie";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 
 const stripePromise = loadStripe(
   String(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
@@ -13,14 +14,17 @@ const Order = () => {
   const { total, subtotal, coupon, isCouponApplied, cartItems, userID } =
     useCartStore();
   const [cookies] = useCookies(["access_token"]);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const savings = subtotal - total;
   const formattedSubtotal = subtotal.toFixed(2);
   const formattedTotal = total.toFixed(2);
   const formattedSavings = savings.toFixed(2);
 
-  const { mutate: handleCheckout, isPending } = useMutation({
+  const { mutate: handleCheckout } = useMutation({
     mutationFn: async () => {
+      setIsRedirecting(true);
+
       const stripe = await stripePromise;
 
       const res = await axios.post(
@@ -39,12 +43,21 @@ const Order = () => {
 
       const session = res.data;
 
-      await stripe?.redirectToCheckout({
+      const result = await stripe?.redirectToCheckout({
         sessionId: session.id,
       });
+
+      if (result?.error) {
+        setIsRedirecting(false);
+        toast.error("Checkout was cancelled");
+      }
     },
     onError: () => {
+      setIsRedirecting(false);
       toast.error("Error finalizing order");
+    },
+    onSettled: () => {
+      setIsRedirecting(false);
     },
   });
 
@@ -92,10 +105,10 @@ const Order = () => {
 
       <button
         onClick={() => handleCheckout()}
-        disabled={isPending}
+        disabled={isRedirecting}
         className="mt-6 w-full rounded-md bg-red-500 py-2.5 text-sm font-semibold text-white hover:bg-red-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {isPending ? "Redirecting..." : "Proceed to Checkout"}
+        {isRedirecting ? "Redirecting..." : "Proceed to Checkout"}
       </button>
     </div>
   );
