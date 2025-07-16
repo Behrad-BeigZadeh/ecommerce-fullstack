@@ -40,7 +40,7 @@ function App() {
       <>
         <Header />
 
-        <div className="flex justify-center items-center flex-grow">
+        <div className="flex justify-center items-center mx-auto flex-grow">
           <Routes>
             <Route path="*" element={<NotFoundPage />} />
             <Route path="/" element={<Home />} />

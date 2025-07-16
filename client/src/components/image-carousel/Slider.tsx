@@ -33,7 +33,7 @@ export default function Slider() {
     <div
       onMouseEnter={() => clearInterval(ref.current)}
       onMouseLeave={() => (ref.current = setInterval(handleNext, 2000))}
-      className="relative w-[90vw] max-h-[80vh] mx-auto mt-10 rounded-xl overflow-hidden"
+      className="relative w-[90vw] max-h-[80vh] mx-auto text-center mt-10 rounded-xl overflow-hidden"
     >
       {/* Blurred background */}
       <img
