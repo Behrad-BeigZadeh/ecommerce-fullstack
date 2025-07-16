@@ -3,25 +3,26 @@ import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
 
 const stripePromise = loadStripe(
   String(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
 );
 
 const Order = () => {
-  const { total, subtotal, coupon, isCouponApplied, cartItems } =
+  const { total, subtotal, coupon, isCouponApplied, cartItems, userID } =
     useCartStore();
+  const [cookies] = useCookies(["access_token"]);
 
   const savings = subtotal - total;
   const formattedSubtotal = subtotal.toFixed(2);
   const formattedTotal = total.toFixed(2);
   const formattedSavings = savings.toFixed(2);
-  const { userID } = useCartStore();
-  const [cookies] = useCookies(["access_token"]);
 
-  const handlePayment = async () => {
-    try {
+  const { mutate: handleCheckout, isPending } = useMutation({
+    mutationFn: async () => {
       const stripe = await stripePromise;
+
       const res = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/payments/create-checkout-session`,
         {
@@ -37,13 +38,15 @@ const Order = () => {
       );
 
       const session = res.data;
+
       await stripe?.redirectToCheckout({
         sessionId: session.id,
       });
-    } catch {
+    },
+    onError: () => {
       toast.error("Error finalizing order");
-    }
-  };
+    },
+  });
 
   return (
     <div className="w-full lg:w-[60%] rounded-2xl border border-slate-300 p-5 shadow-md bg-white">
@@ -88,10 +91,11 @@ const Order = () => {
       </div>
 
       <button
-        onClick={handlePayment}
-        className="mt-6 w-full rounded-md bg-red-500 py-2.5 text-sm font-semibold text-white hover:bg-red-600 transition"
+        onClick={() => handleCheckout()}
+        disabled={isPending}
+        className="mt-6 w-full rounded-md bg-red-500 py-2.5 text-sm font-semibold text-white hover:bg-red-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Proceed to Checkout
+        {isPending ? "Redirecting..." : "Proceed to Checkout"}
       </button>
     </div>
   );
